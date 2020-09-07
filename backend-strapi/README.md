@@ -22,6 +22,7 @@ yarn create strapi-app backend-strapi --no-run
     DB: ppcms
 
 cd backend-strapi
+yarn strapi install graphql
 yarn run strapi generate:plugin wysiwyg
 
 Admin user: admin.pp@gmail.com, Phuphuong2020
@@ -36,3 +37,12 @@ yarn develop --watch-admin
 ==> Apply Patch for CKEditor
 
 yarn build
+
+# AWS Provider
+
+https://strapi.io/documentation/v3.x/plugins/upload.html#using-a-provider
+yarn add strapi-provider-upload-aws-s3
+yarn add pg
+
+## Then add ./config/plugins.js with aws s3
+

@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_attributes",
+  "info": {
+    "name": "ProdAttribute"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Value": {
+      "type": "string",
+      "required": true
+    },
+    "prod_attribute_group": {
+      "model": "prod-attribute-group",
+      "via": "prod_attributes"
+    },
+    "prod_product_and_attributes": {
+      "via": "prod_attribute",
+      "collection": "prod-product-and-attribute"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_products",
+  "info": {
+    "name": "ProdProduct"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "ShortDescription": {
+      "type": "text"
+    },
+    "LongDescription": {
+      "type": "richtext"
+    },
+    "UnitPrice": {
+      "type": "float"
+    },
+    "StockNumber": {
+      "type": "integer"
+    },
+    "IsActive": {
+      "type": "boolean"
+    },
+    "Images": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "prod_category": {
+      "model": "prod-category",
+      "via": "prod_products"
+    },
+    "prod_brand": {
+      "model": "prod-brand",
+      "via": "prod_products"
+    },
+    "prod_product": {
+      "via": "prod_products",
+      "model": "prod-product"
+    },
+    "prod_products": {
+      "via": "prod_product",
+      "collection": "prod-product"
+    },
+    "prod_product_and_attributes": {
+      "via": "prod_product",
+      "collection": "prod-product-and-attribute"
+    },
+    "prod_discounts": {
+      "via": "prod_product",
+      "collection": "prod-discount"
+    }
+  }
+}

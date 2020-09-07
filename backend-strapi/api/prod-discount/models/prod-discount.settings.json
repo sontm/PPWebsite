@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_discounts",
+  "info": {
+    "name": "ProdDiscount"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Description": {
+      "type": "string"
+    },
+    "FromDate": {
+      "type": "datetime"
+    },
+    "ToDate": {
+      "type": "datetime"
+    },
+    "Type": {
+      "type": "string"
+    },
+    "FixMoney": {
+      "type": "float"
+    },
+    "FixPercent": {
+      "type": "float"
+    },
+    "prod_category": {
+      "model": "prod-category",
+      "via": "prod_discounts"
+    },
+    "prod_brand": {
+      "model": "prod-brand",
+      "via": "prod_discounts"
+    },
+    "prod_product": {
+      "model": "prod-product",
+      "via": "prod_discounts"
+    },
+    "Images": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "Coupon": {
+      "type": "string"
+    },
+    "IsActive": {
+      "type": "boolean"
+    }
+  }
+}

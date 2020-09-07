@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_brands",
+  "info": {
+    "name": "ProdBrand"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "ImgLogo": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "IsActive": {
+      "type": "boolean"
+    },
+    "prod_country": {
+      "via": "prod_brands",
+      "model": "prod-country"
+    },
+    "prod_products": {
+      "via": "prod_brand",
+      "collection": "prod-product"
+    },
+    "prod_discounts": {
+      "via": "prod_brand",
+      "collection": "prod-discount"
+    }
+  }
+}

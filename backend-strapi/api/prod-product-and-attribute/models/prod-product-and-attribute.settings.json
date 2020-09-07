@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_product_and_attributes",
+  "info": {
+    "name": "ProdProductAndAttribute"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "prod_product": {
+      "model": "prod-product",
+      "via": "prod_product_and_attributes"
+    },
+    "prod_attribute": {
+      "model": "prod-attribute",
+      "via": "prod_product_and_attributes"
+    }
+  }
+}

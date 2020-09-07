@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/prod-countries",
+      "handler": "prod-country.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/prod-countries/count",
+      "handler": "prod-country.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/prod-countries/:id",
+      "handler": "prod-country.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/prod-countries",
+      "handler": "prod-country.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/prod-countries/:id",
+      "handler": "prod-country.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/prod-countries/:id",
+      "handler": "prod-country.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

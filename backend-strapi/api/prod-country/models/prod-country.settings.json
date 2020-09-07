@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_countries",
+  "info": {
+    "name": "ProdCountry"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Code": {
+      "type": "string"
+    },
+    "prod_brands": {
+      "collection": "prod-brand",
+      "via": "prod_country"
+    }
+  }
+}

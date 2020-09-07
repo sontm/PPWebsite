@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prod_categories",
+  "info": {
+    "name": "ProdCategory"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Description": {
+      "type": "string"
+    },
+    "IsActive": {
+      "type": "boolean"
+    },
+    "DisplayOrder": {
+      "type": "integer"
+    },
+    "prod_category": {
+      "via": "prod_categories",
+      "model": "prod-category"
+    },
+    "prod_categories": {
+      "via": "prod_category",
+      "collection": "prod-category"
+    },
+    "prod_products": {
+      "via": "prod_category",
+      "collection": "prod-product"
+    },
+    "prod_discounts": {
+      "via": "prod_category",
+      "collection": "prod-discount"
+    }
+  }
+}
