@@ -13,6 +13,10 @@ sudo systemctl status mongod
 sudo systemctl stop mongod
 sudo systemctl restart mongod
 
+## Mongodb on Macos
+brew tap mongodb/brew
+brew install mongodb-community@4.4
+brew services start mongodb-community@4.4
 
 ## Strapi application
 https://strapi.io/documentation/3.0.0-beta.x/guides/registering-a-field-in-admin.html

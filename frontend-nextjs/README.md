@@ -55,3 +55,10 @@ After building, the start script starts a Node.js server that supports hybrid pa
 npm run start
 
     Tip: You can customize the start script in package.json to accept a PORT parameter by updating it as: "start": "next start -p $PORT".
+
+# Using antd
+
+https://dev.to/burhanuday/using-ant-design-with-nextjs-custom-variables-for-ant-design-57m5
+
+npm install --save @zeit/next-css @zeit/next-less @zeit/next-sass babel-plugin-import less
+npm install --save antd

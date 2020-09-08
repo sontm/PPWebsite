@@ -5,7 +5,8 @@ import utilStyles from '../styles/utils.module.css'
 import axios from "axios";
 import { getSortedPostsData } from '../lib/posts'
 
-import { Button } from '@material-ui/core';
+import { Button, Radio } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 
 export default function Home({arrNews}) {
   return (
@@ -38,7 +39,13 @@ export default function Home({arrNews}) {
         </ul>
       </section>
 
-      <Button color="secondary">Hello World</Button>
+      <Button type="primary">
+        Primary
+      </Button>
+      <Button type="primary" icon={<DownloadOutlined />}>
+        Download
+      </Button>
+
     </Layout>
   )
 }
