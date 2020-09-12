@@ -36,8 +36,8 @@
       "via": "prod_discounts"
     },
     "prod_product": {
-      "model": "prod-product",
-      "via": "prod_discounts"
+      "via": "prod_discounts",
+      "model": "prod-product"
     },
     "Images": {
       "collection": "file",

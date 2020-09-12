@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "export": "next build && next export"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -21,8 +22,13 @@
     "gray-matter": "^4.0.2",
     "less": "^3.12.2",
     "next": "9.3.5",
+    "next-redux-wrapper": "^6.0.2",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.11.1"

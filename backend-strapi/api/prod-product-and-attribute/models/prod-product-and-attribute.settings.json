@@ -10,8 +10,8 @@
   },
   "attributes": {
     "prod_product": {
-      "model": "prod-product",
-      "via": "prod_product_and_attributes"
+      "via": "prod_product_and_attributes",
+      "model": "prod-product"
     },
     "prod_attribute": {
       "model": "prod-attribute",

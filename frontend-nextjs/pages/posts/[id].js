@@ -1,10 +1,10 @@
-import Layout from '../../components/layout'
+import MyLayout from '../../components/layout'
 import Head from 'next/head'
 import axios from "axios";
 
 export default function Post({ data }) {
     return (
-        <Layout>
+        <MyLayout>
           <Head>
             <title>{data.Title}</title>
           </Head>
@@ -16,7 +16,7 @@ export default function Post({ data }) {
           {data.PublishedDate}
 
           <div dangerouslySetInnerHTML={{ __html: data.Content }} />
-        </Layout>
+        </MyLayout>
       )
 }
 

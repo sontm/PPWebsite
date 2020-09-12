@@ -26,3 +26,45 @@ img {
   display: block;
 }
 
+p {
+  margin-bottom: 0.5em;
+}
+
+/* Horizontal Line */
+hr {
+  background-color: transparent;
+  display: block;
+  height: 1px;
+  border-width: 0;
+  border-top: 1px solid #d0d0d0;
+  line-height: 19px;
+  margin-top: 0;
+  margin-bottom: 14px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+ul {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 20px;
+
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* FOr Touch Spin (Quantity Increase/Decrease) */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+

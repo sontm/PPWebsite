@@ -56,6 +56,10 @@ npm run start
 
     Tip: You can customize the start script in package.json to accept a PORT parameter by updating it as: "start": "next start -p $PORT".
 
+npm run export
+  Will export to static html in out dir.
+  $ serve out
+    
 # Using antd
 
 https://dev.to/burhanuday/using-ant-design-with-nextjs-custom-variables-for-ant-design-57m5

@@ -1,0 +1,353 @@
+.product-wrapper {
+    /* box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1); */
+    border-radius: 0px;
+    border-color:transparent;
+    transition: all 0.2s linear;
+    min-height: 390px;
+    margin:0.5px;
+    margin-top: 5px;
+    /* background: var(--xx) */
+    height: 100%;
+    display: inline-block;
+
+    max-width: 300px;
+    /* xs ,sm */
+}
+
+
+/* Override Padding 24 of ANTD */
+.product-wrapper .ant-card-body  {
+    /* top right bottom left */
+    padding: 16px 20px 10px 20px !important;
+    zoom: 1;
+    height: 100% !important;
+}
+.product-wrapper:hover {
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+}
+
+.product-wrapper .image-thump {
+    width:96%;
+    height:250px;
+    margin-left: 2%;
+    margin-right: 2%;
+    transition: all 0.2s linear;
+    text-align: center;
+    /* position: relative; 
+    overflow:hidden; */
+}
+.product-wrapper .image-thump img {
+    max-height:100%;
+}
+
+.product-wrapper .product-title {
+    height: 48px;
+    text-align: left;
+    overflow: hidden;
+}
+
+.product-wrapper .product-price {
+    /* transform: scale(1.2) */
+    display:inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: rgb(255, 95, 95);
+}
+.product-wrapper .product-price-old {
+    display:inline-block;
+    margin-right: 10px;
+    text-decoration: line-through;
+    font-style: italic;
+    font-size: 1em;
+}
+.product-wrapper .product-price-discount {
+    display:inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 1em;
+}
+.product-wrapper .product-quantity {
+    display:inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 1em;
+    float: right;
+}
+
+.product-wrapper .btn-addtocart {
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+}
+/* .product-wrapper .product-info {
+    
+} */
+
+
+
+
+.gift-banner {
+    background: rgb(255, 95, 95);
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+    transform: rotate(-60deg);
+}
+.gift-banner:before,
+.gift-banner:after {
+    color: white;
+    font-weight: bold;
+    content: "Quà";
+    vertical-align: middle;
+    line-height: 36px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 36px;
+    width: 36px;
+    background: rgb(255, 95, 95);
+    z-index: 10;
+}
+.gift-banner:before {
+    transform: rotate(30deg);
+}
+.gift-banner:after {
+    transform: rotate(60deg);
+}
+
+
+
+
+
+.discount-banner {
+    background: rgb(255, 95, 95);
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 40px;
+    z-index: 20;
+
+    font-weight: bold;
+    text-align: center;
+    color:white;
+    vertical-align: middle;
+    line-height: 30px;
+}
+.discount-banner:before {
+    border-top: 12px solid rgb(255, 95, 95);
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    content: "";
+    height: 0;
+    left: 0;
+    position: absolute;
+    top: 30px;
+    width: 0;
+}
+
+/* Default COupon, Top-RIght */
+.coupon-banner {
+    width: 50px;
+    height: 30px;
+    background: rgb(255, 95, 95);
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 30px;
+    color:white;
+}
+.coupon-banner:before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 7px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 12px solid rgb(255, 95, 95);
+    border-bottom: 7px solid transparent;
+}
+
+
+/* This Coupon is Below Gift Tag */
+.coupon-banner-belowgift {
+    width: 50px;
+    height: 30px;
+    background: rgb(255, 95, 95);
+    position: absolute;
+    top: 55px;
+    right: 0;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 30px;
+    color:white;
+}
+.coupon-banner-belowgift:before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 7px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 12px solid rgb(255, 95, 95);
+    border-bottom: 7px solid transparent;
+}
+.empty-space-36pxheight{
+    height: 36px;
+}
+/* lg */
+@media only screen and (max-width : 992px) {
+    .product-wrapper {
+        min-height: 300px;
+        margin:0.5px;
+        margin-top: 2px;
+        /* background: var(--xx) */
+        height: 100%;
+        display: inline-block;
+        max-width: 300px;
+    }
+    .product-wrapper .image-thump {
+        width:96%;
+        height:200px;
+        text-align: center;
+    }
+    .product-wrapper .image-thump img {
+        max-height:100%;
+    }
+    .product-wrapper .btn-addtocart {
+        display: none;
+    }
+    /* Override Padding 24 of ANTD */
+    .product-wrapper .ant-card-body  {
+        /* top right bottom left */
+        padding: 10px 12px 8px 12px !important;
+        zoom: 1;
+        height: 100% !important;
+    }
+    .ant-card-head {
+        padding: 0 16px !important;
+    }
+    .ant-card-body {
+        padding: 16px !important;
+    }
+
+    /* Space for AddToCard button, but not used when small screen */
+    .empty-space-36pxheight{
+        display: none;
+    }
+}
+/* md */
+@media only screen and (max-width : 768px) {
+    .product-wrapper {
+        min-height: 300px;
+        margin:0.5px;
+        margin-top: 2px;
+        /* background: var(--xx) */
+        height: 100%;
+        display: inline-block;
+        max-width: 300px;
+    }
+    .product-wrapper .image-thump {
+        width:96%;
+        height:150px;
+        text-align: center;
+    }
+    .product-wrapper .image-thump img {
+        max-height:100%;
+    }
+    .product-wrapper .btn-addtocart {
+        display: none;
+    }
+    /* Override Padding 24 of ANTD */
+    .product-wrapper .ant-card-body  {
+        /* top right bottom left */
+        padding: 6px 8px 6px 8px !important;
+        zoom: 1;
+        height: 100% !important;
+    }
+    .ant-card-head {
+        padding: 0 12px !important;
+    }
+    .ant-card-body {
+        padding: 12px !important;
+    }
+    /* Space for AddToCard button, but not used when small screen */
+    .empty-space-36pxheight{
+        display: none;
+    }
+    .product-wrapper .product-price-discount {
+        display: none;
+    }
+}
+
+
+
+@media only screen and (max-width : 576px) {
+    .product-wrapper {
+        min-height: 200px;
+        margin:0.5px;
+        margin-top: 2px;
+        /* background: var(--xx) */
+        height: 100%;
+        display: inline-block;
+    }
+    .product-wrapper .image-thump {
+        height: 120px;
+        width: 100%;
+        text-align: center;
+    }
+    .product-wrapper .image-thump img {
+        max-height:100%;
+    }
+
+    .product-wrapper .btn-addtocart {
+        display: none;
+    }
+    /* Override Padding 24 of ANTD */
+    .product-wrapper .ant-card-body  {
+        /* top right bottom left */
+        padding: 4px 5px 4px 5px !important;
+        zoom: 1;
+        height: 100% !important;
+    }
+    .ant-card-head {
+        padding: 0 8px !important;
+    }
+    .ant-card-body {
+        padding: 8px !important;
+    }
+    /* Space for AddToCard button, but not used when small screen */
+    .empty-space-36pxheight{
+        display: none;
+    }
+    .product-wrapper .product-price-discount {
+        display: none;
+    }
+}
+
+

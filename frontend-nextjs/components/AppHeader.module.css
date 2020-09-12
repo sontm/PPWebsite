@@ -1,0 +1,227 @@
+.app-title {
+  float: left;
+  height: 50px;
+  overflow: hidden;
+  padding-left: 10px;
+  color: white;
+  font-size: 1.5em;
+}
+@media (max-width: 992px) {
+  .app-title {
+    float: left;
+    height: 50px;
+    overflow: hidden;
+    padding-left: 0px;
+    font-size: 1.3em;
+    color: white;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-title {
+    float: left;
+    height: 50px;
+    overflow: hidden;
+    padding-left: 0px;
+    font-size: 1.2em;
+    color: white;
+  }
+}
+/* .app-header {
+  position: fixed;
+  width: 100%;
+  box-shadow: 0 2px 8px #f0f1f2;
+  z-index: 10;
+  padding: 0;
+} */
+
+/* Override ANTD Header margin  */
+.ant-layout-header {
+  margin-left: 0% !important;
+  margin-right: 0% !important;
+}
+
+
+.app-header {
+  background: #189eff;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+/* xs, sm */
+@media (max-width: 768px) {
+  .app-header {
+    background: #189eff;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+}
+/* md */
+@media (max-width: 992px) {
+  .app-header {
+    background: #189eff;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .show-only-in-md {
+    font-size: 24px !important;
+  }
+  .hidden-in-md {
+    display: none !important;
+    color: white;
+  }
+}
+/* lg */
+@media (max-width: 1200px) {
+  .app-header {
+    background: #189eff;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+/* OVerride When Hover WHite button on Header */
+.app-header .ant-btn:hover {
+  color: rgb(230, 230, 230)
+}
+.app-header .ant-btn:active {
+  color: white;
+}
+.app-header .ant-btn:focus {
+  color: white;
+}
+
+
+/* OVerride Border color of Search */
+.app-header .ant-input-group-addon button {
+  /* background: red !important; */
+  border: 2px solid white !important;
+}
+
+/* Override color of Link  */
+.app-title a {
+  display: block;
+  color: white;
+}
+
+.ant-layout-header{
+  z-index: 150 !important;
+}
+
+/* Override Weird Heigh 64px of antd */
+.ant-layout-header {
+  height: 100% !important;
+  line-height: 50px !important;
+  padding: 0;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.ant-input-group-wrapper {
+  vertical-align: middle;
+}
+/* End Override */
+
+.app-title a {
+  text-decoration: none;
+  line-height: 50px;
+  font-size: 21px;
+  display: inline-block;
+}
+
+.app-title a:hover {
+  text-decoration: none;
+}
+
+
+
+.hamburger-category-menu {
+  color: white;
+  font-size: 20px;
+}
+.category-menu-text {
+  margin-left: 7px;
+}
+
+
+
+.top-header-menu-item {
+  display: block;
+  overflow: hidden;
+}
+
+.cart-container {
+  display: block;
+  margin-right: 10px;
+  float: right;
+  overflow: visible;
+}
+
+.cart-container .cart-badge {
+  margin-left: 5px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.flyout-outside-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 50;
+}
+
+.flyout-outside-mask-brand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 101;
+  pointer-events: none;
+}
+
+/* THis contaiin Menu such as Danh Muc San Pham, Hot .. */
+.header-options {
+
+}
+/* ViewPort: xs <576px,sm	≥576px, md	≥768px, lg	≥992px, xl	≥1200px, xxl≥1600px */
+@media (max-width: 768px) {
+  .header-options {
+    display: none;
+  }
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  .mobile-bottom-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  
+    width: 100%;
+    z-index: 300;
+
+    padding: 0px;
+  }
+  .mobile-bottom-menu.ant-menu-horizontal {
+    line-height: 30px !important;
+  }
+  .mobile-bottom-menu.ant-btn-group-lg > .ant-btn, .ant-btn-group-lg > span > .ant-btn {
+    line-height: 20px !important;
+    height: 40px !important;
+    padding: 0px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-bottom-menu {
+    display: none !important;
+  }
+}

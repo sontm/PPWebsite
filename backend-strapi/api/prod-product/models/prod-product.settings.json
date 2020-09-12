@@ -13,9 +13,6 @@
       "type": "string",
       "required": true
     },
-    "ShortDescription": {
-      "type": "text"
-    },
     "LongDescription": {
       "type": "richtext"
     },
@@ -48,20 +45,23 @@
       "via": "prod_products"
     },
     "prod_product": {
-      "via": "prod_products",
-      "model": "prod-product"
+      "model": "prod-product",
+      "via": "prod_products"
     },
     "prod_products": {
-      "via": "prod_product",
-      "collection": "prod-product"
+      "collection": "prod-product",
+      "via": "prod_product"
     },
     "prod_product_and_attributes": {
-      "via": "prod_product",
-      "collection": "prod-product-and-attribute"
+      "collection": "prod-product-and-attribute",
+      "via": "prod_product"
     },
     "prod_discounts": {
-      "via": "prod_product",
-      "collection": "prod-discount"
+      "collection": "prod-discount",
+      "via": "prod_product"
+    },
+    "ShortDescription": {
+      "type": "richtext"
     }
   }
 }

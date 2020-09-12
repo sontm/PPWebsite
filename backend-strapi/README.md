@@ -14,7 +14,7 @@ sudo systemctl stop mongod
 sudo systemctl restart mongod
 
 ## Mongodb on Macos
-brew tap mongodb/brew
+brew tap mongodb/brew[id]
 brew install mongodb-community@4.4
 brew services start mongodb-community@4.4
 

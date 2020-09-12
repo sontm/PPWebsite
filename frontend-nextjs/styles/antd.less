@@ -1,7 +1,12 @@
 @import "~antd/dist/antd.less";
 
+
 @primary-color: #1890ff; // primary color for all components
-@link-color: #1890ff; // link color
+@layout-body-background: #f4f4f4;
+@layout-header-background: #189eff;
+@layout-footer-background: #189eff;
+
+// @link-color: #1890ff; // link color
 @success-color: #52c41a; // success state color
 @warning-color: #faad14; // warning state color
 @error-color: #f5222d; // error state color
@@ -13,3 +18,77 @@
 @border-radius-base: 4px; // major border radius
 @border-color-base: #d9d9d9; // major border color
 @box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15); // major shadow for layers
+
+
+/* Override Card header color, SIdeMenu and Product Detail */
+.app-side-menu .ant-card-head {
+    background: #189eff !important;
+    color: white !important;
+}
+
+.product-detail .ant-card-head {
+    background: #189eff !important;
+    color: white !important;
+}
+
+
+
+/* OVerride Border color of Search */
+.app-header .ant-input-group-addon button {
+    /* background: red !important; */
+    border: 2px solid white !important;
+}
+
+/* Override color of Link  */
+.app-title a {
+    display: block;
+    color: white;
+}
+
+/* Override Weird Heigh 64px of antd */
+.ant-layout-header {
+    height: 100% !important;
+    line-height: 50px !important;
+    padding: 0;
+    margin-left: 0% !important;
+    margin-right: 0% !important;
+    z-index: 150 !important;
+}
+
+.ant-input-group-wrapper {
+vertical-align: middle;
+}
+
+/* Override ANTD of Right Border on Selected Menu */
+.ant-menu-item::after {
+    border: none !important;
+}
+.app-side-menu .ant-menu-item {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+}
+.ant-menu-item-selected > a {
+    color: gray;
+}
+.ant-menu-inline .ant-menu-submenu-title {
+    padding-right: 5px !important;
+}
+
+/* Override Padding 24 of ANTD */
+.product-wrapper .ant-card-body  {
+    /* top right bottom left */
+    padding: 16px 20px 10px 20px !important;
+    zoom: 1;
+    height: 100% !important;
+}
+
+/* Override ANT Design Badge */
+.cart-container .cart-badge .ant-badge-count {
+    background: #fdd835 !important;
+    color: #4a4a4a;
+  }
+  /* OVerride Border color of CART */
+  .cart-container button {
+    border: 2px solid white !important;
+  }
+/* End Override */

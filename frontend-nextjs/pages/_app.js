@@ -1,23 +1,13 @@
 // import App from 'next/app'
-
-import '../styles/global.css'
 import "../styles/antd.less";
+import '../styles/global.css'
 
-function MyApp({ Component, pageProps }) {
+import { Provider } from 'react-redux'
+import { wrapper } from '../redux/store'
+
+console.log("APIURL:" + process.env.API_URL)
+const MyApp = ({ Component, pageProps }) => {
     return <Component {...pageProps} />
 }
+export default wrapper.withRedux(MyApp)
 
-// Only uncomment this method if you have blocking data requirements for
-// every single page in your application. This disables the ability to
-// perform automatic static optimization, causing every page in your app to
-// be server-side rendered.
-//
-// MyApp.getInitialProps = async (appContext) => {
-//   // calls page's `getInitialProps` and fills `appProps.pageProps`
-//   const appProps = await App.getInitialProps(appContext);
-//
-//   return { ...appProps }
-// }
-
-export default MyApp
-  

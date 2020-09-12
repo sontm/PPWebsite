@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Layout from '../components/layout'
+import MyLayout from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
 import axios from "axios";
 import { getSortedPostsData } from '../lib/posts'
@@ -8,9 +8,9 @@ import { getSortedPostsData } from '../lib/posts'
 import { Button, Radio } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
-export default function Home({arrNews}) {
+export default function Home({data}) {
   return (
-    <Layout home>
+    <MyLayout home>
       <Head>
         <title>Wel come to PhuPhuong</title>
       </Head>
@@ -25,15 +25,11 @@ export default function Home({arrNews}) {
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
         <ul className={utilStyles.list}>
-          {arrNews.map(({ _id, PublishedDate, Title, ShortDescription }) => (
-            <li className={utilStyles.listItem} key={_id}>
-              <Link href="/posts/[_id]" as={`/posts/${_id}`}>
-                <a>{Title}</a>
+          {data.map(({ id, Name }) => (
+            <li className={utilStyles.listItem} key={id}>
+              <Link href="/products/[id]" as={`/products/${id}`}>
+                <a>{Name}</a>
               </Link>
-              <br />
-              {ShortDescription}
-              <br />
-              {PublishedDate}
             </li>
           ))}
         </ul>
@@ -46,7 +42,7 @@ export default function Home({arrNews}) {
         Download
       </Button>
 
-    </Layout>
+    </MyLayout>
   )
 }
 
@@ -56,11 +52,11 @@ export default function Home({arrNews}) {
 export async function getStaticProps() {
   const allPostsData = getSortedPostsData()
 
-  const res = await axios.get(process.env.API_URL+"/app-news")
-  const arrNews = await res.data
+  const res = await axios.get(process.env.API_URL+"/prod-products")
+  const data = await res.data
   return {
     props: {
-      arrNews
+      data
     }
   }
 }

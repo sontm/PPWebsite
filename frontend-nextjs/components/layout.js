@@ -1,67 +1,33 @@
 import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
-
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import dynamic from 'next/dynamic'
 
 import PrimarySearchAppBar from './appbar';
+import AppHeader from './AppHeader';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  }
-}));
+import { Layout, Row, Col, BackTop } from 'antd';
+const { Content, Header, Sider, Footer } = Layout;
 
-export default function Layout({ children, home }) {
-  const classes = useStyles();
 
+export default function MyLayout({ children, home }) {
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <PrimarySearchAppBar />
-        </Grid>
+    <Layout>
+      <AppHeader />
 
-        <Grid item xs={12}>
-          {children}
-        </Grid>
+      <Layout className={styles['app-container']}>
+      <Content>
+        <div style={{marginLeft: "5%", marginRight: "5%"}}>
+        {children}
+        </div>
+      </Content>
+      </Layout>
 
-        <Grid item xs={12}>
-          <div className={styles.footer}>
-          <Grid container spacing={3}>
-            <Grid item xs={2} />
-            <Grid item xs={4}>
-              <a href="#">
-                <h4 style={{color: "white"}}>YamaStack</h4>
-              </a>
-              <p>
-                  Ứng Dụng cho Cuộc Sống!
-              </p>
-            </Grid>
-            <Grid item xs={4}>
-              <h3>
-                    Tải Về
-              </h3>
-              <ul>
-                <li>
-                    <a href="https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS" target="_blank">
-                    Tải Về từ Android Google Play
-
-                    </a>
-                </li>
-                <li><a href="https://apps.apple.com/app/id1498085260" target="_blank">
-                Tải Về từ Apple App Store
-                    </a>
-                </li>
-              </ul>
-            </Grid>
-          </Grid>
-          <Grid item xs={2} />
-          
+      <Footer style={{ textAlign: 'center', minHeight:"200px", marginTop:"20px"}}>
+          <div className={styles['app-footer']}>
+              Phu Phuong ©2019
           </div>
-        </Grid>
-      </Grid>
-    </div>
+      </Footer>
+    </Layout>
   )
 }
