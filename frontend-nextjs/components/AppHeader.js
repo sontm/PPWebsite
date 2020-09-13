@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux'
-
+import { bindActionCreators } from 'redux'
 import styles from './AppHeader.module.css';
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import AppDropdownMenu from './AppDropdownMenu';
+
 import {ShoppingCartOutlined, UserOutlined, MenuOutlined, ShopOutlined} from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Input, Popover } from 'antd';
 import { Row, Col, Button,Badge } from 'antd';
@@ -11,7 +13,90 @@ const { Search } = Input;
 const Header = Layout.Header;
 const {SubMenu} = Menu;
 
-function AppHeader(param) {
+class AppHeader extends React.Component {
+  constructor(props) {
+    super(props); 
+    this.state = {
+      hoveredMenuList: false,
+      hoveredParent: "",
+
+      hoveredBrandMenu: false,
+      hoveredBrandContainer:false,
+
+      searchTerm:""
+      
+    };
+    this.onMenuListHover = this.onMenuListHover.bind(this);   
+    this.onMenuListOut = this.onMenuListOut.bind(this);   
+    this.onParentMenuHover = this.onParentMenuHover.bind(this);   
+    this.onMenuContainerOut = this.onMenuContainerOut.bind(this);   
+    this.onParentMenuClick = this.onParentMenuClick.bind(this);   
+  }
+  // WHen mouse over DanhMucSanPham
+  onMenuListHover() {
+    if (!this.isHomePage) {
+      // Below timeout to prevent when Mouse only Move through DanhMucSanPham-menu shown
+      // wait 300ms to show Menu list
+      this.timeout = setTimeout(() => {
+        this.setState({
+          hoveredMenuList: true
+        })
+      },300);
+      
+    }
+  }
+  // WHen mouse out DanhMucSanPham
+  onMenuListOut() {
+    if (!this.isHomePage) {
+      if(this.timeout) {
+        clearTimeout(this.timeout);
+      }
+
+      // Below Timeout to make Time for Mouse move from DanhMucSanPham to the shown menu below
+      // If is not SET any more, mean hover then right after that, will disappear
+      setTimeout(() => {
+        if (this.state.hoveredParent == "") {
+          this.setState({
+            hoveredMenuList: false,
+            hoveredParent: ""
+          })
+        }
+      }, 100);
+    }
+  }
+  onParentMenuHover(e) {
+    this.setState({
+      hoveredParent: e.target.textContent.trim()
+    })
+  }
+  onMenuContainerOut() {
+    this.setState({
+      hoveredMenuList: false,
+      hoveredParent: ""
+    })
+  }
+  onParentMenuClick() {
+    this.setState({
+      hoveredMenuList: false,
+      hoveredParent: ""
+    })
+  }
+
+
+  render() {
+    let isHomePage = this.props.isHome;
+    this.isHomePage = isHomePage;
+    console.log("AppHeader------------")
+    console.log(this.props.siteInfo.categoriesLevel)
+    let appDropDownMenu = 
+        <AppDropdownMenu config={this.props.siteInfo.categoriesLevel} 
+          onParentMenuOut={this.onParentMenuOut} onMenuContainerOut={this.onMenuContainerOut}
+          onParentMenuHover={this.onParentMenuHover} hoveredParent={this.state.hoveredParent}
+          onParentMenuClick={this.onParentMenuClick}
+          hoveredMenuList={this.state.hoveredMenuList}
+          isHomePage={isHomePage}
+          />;
+
     return (
         <React.Fragment>
           {/* <div className={this.state.hoveredMenuList ? "flyout-outside-mask" : 
@@ -68,7 +153,7 @@ function AppHeader(param) {
                   <Button  ghost size="large">
                     <ShoppingCartOutlined style={{fontSize:"1.2em", color:"white"}} className={styles['show-only-in-md']}/>
                     <span className={styles['hidden-in-md']}>Giỏ Hàng</span>
-                    <Badge showZero count={param.modalReducer.cartNum} 
+                    <Badge showZero count={1} 
                       className={styles['cart-badge']}/>
                   </Button>
                   </Link>
@@ -80,8 +165,7 @@ function AppHeader(param) {
 
           <Row>
           <Col xs={0} sm={0} md={12} lg={6} xl={6} xxl={4}>
-            <div onMouseEnter={console.log("this.onMenuListHover")} 
-                onMouseLeave={console.log("this.onMenuListOut")}
+            <div onMouseEnter={this.onMenuListHover} onMouseLeave={this.onMenuListOut}
               style={{marginLeft:"15px"}} className={styles['hamburger-category-menu']}>
               <MenuOutlined />
               <span className={styles['category-menu-text']} >Danh Mục Sản Phẩm</span>
@@ -97,10 +181,20 @@ function AppHeader(param) {
             </div>
           </Col>
           </Row>
+
+          {isHomePage ? null : appDropDownMenu}
+
         </div>
         </Header>
+        {isHomePage ? appDropDownMenu: null}
         </React.Fragment>
     )
+  }
 }
 
-export default connect((state) => state)(AppHeader);
+const mapStateToProps = (state) => (state);
+const mapDispatchToProps = (dispatch) => {
+    return {
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AppHeader)

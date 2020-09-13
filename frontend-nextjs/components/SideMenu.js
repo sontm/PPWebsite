@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import { Layout, Menu, Dropdown, Input, Button } from 'antd';
 import { Row, Col, Card } from 'antd';
 import { Checkbox, Slider, InputNumber, Radio, Tooltip } from 'antd';
-import Icon from '@ant-design/icons';
 import Link from 'next/link'
+import styles from './SideMenu.module.css';
 
 const { Search } = Input;
 const Sider = Layout.Sider;
@@ -16,7 +16,7 @@ class SideMenu extends Component {
     // }
 
     renderSelectCategory() {
-        console.log("===================== renderSelectCategory")
+        //<Link href="/category/[id]" as={`/category/${topMenu.id}`}>
         // Type 1 of Category (Query Whole Category)
         if (this.props.categoriesLevel) {
             
@@ -26,7 +26,48 @@ class SideMenu extends Component {
             selectedKeys.push("" + curID)
 
             // From Whole Menu, here only Choose the Correct Category to Select, CANBE CUSTOMIZE
-            
+            let menuToDisplay = {};
+            // First, find which part current Category is in
+            // prop is "BanhKeo"
+            for (var prop in this.props.categoriesLevel) {
+                if (Object.prototype.hasOwnProperty.call(this.props.categoriesLevel, prop)) {
+                    // curMenu is First High Level Menu
+                    let curMenu = this.props.categoriesLevel["" +prop];
+                    openKeys.push("" + curMenu.id);
+                    if (curMenu.id == curID) {
+                        // Selected Category is is First Menu
+                        menuToDisplay[""+prop] = curMenu;
+                        openKeys.push("" + curMenu.id);
+                    } else {
+                        for (var propSub in curMenu) {
+                            if (Object.prototype.hasOwnProperty.call(curMenu, propSub)) {
+                                if (propSub != "id") {
+                                    let curSubMenu = curMenu[""+propSub];
+                                    if (curSubMenu.id == curID) {
+                                        // Selected Category is Second Menu
+                                        menuToDisplay[""+prop] = curMenu;
+                                        openKeys.push("" + curMenu.id);
+                                        openKeys.push("" + curSubMenu.id);
+                                    } else {
+                                        // Search in all THird Menu
+                                        if (curSubMenu.subs && curSubMenu.subs.length > 0) {
+                                            curSubMenu.subs.forEach(element => {
+                                                if (element.id == curID) {
+                                                    // THis is Third Menu
+                                                    menuToDisplay[""+prop] = curMenu;
+                                                    openKeys.push("" + curMenu.id);
+                                                    openKeys.push("" + curSubMenu.id);
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // menuToDisplay
             // "BanhKeo":{
             //       "id": 1,
@@ -34,39 +75,71 @@ class SideMenu extends Component {
             //     },
 
             // --------CUSTOMIZE: COmment this to Display WHOLE LEVEL
-            let menuToDisplay = this.props.categoriesLevel;
+            menuToDisplay = this.props.categoriesLevel;
             const subMenusFirst = [];
             if (menuToDisplay) {
                 // propD is "BanhKeo"
-                var subMenusSecond = [];
-                menuToDisplay.forEach((topMenu, idx) => {
-                    const subMenuItems = [];
-                    openKeys.push("" + topMenu.id);
-                    topMenu.prod_categories.forEach((curItem, idx) => {
-                        // curMenuLvl is {id: 4, subs: [{id:8, name:"Banh1"}, {id:9, name:"Banh2"}]},
-                        subMenuItems.push(
-                            <Menu.Item key={curItem.id} 
-                            className={curItem.id==curID ? "sidemenu-cate-selected" : ""}>
-                                <Link href="/category/[id]" as={`/category/${curItem.id}`}>
-                                <a>{curItem.Name}</a>
-                                </Link>
-                            </Menu.Item>
-                        );
-                    });
-                    subMenusSecond.push(
-                        <SubMenu
-                        key={topMenu.id}
-                        className={topMenu.id==curID ? "sidemenu-cate-selected" : ""}
-                        title={
-                            <Link href="/category/[id]" as={`/category/${topMenu.id}`}>
-                                <a>{topMenu.Name}</a>
-                            </Link>
-                        }>
-                            {subMenuItems}
-                        </SubMenu>
-                    );
+                for (var propD in menuToDisplay) {
+                    if (Object.prototype.hasOwnProperty.call(menuToDisplay, propD)) {
+                        if (propD != "id") {
+                            // curItem is
+                            //{
+                            //       "id": 1,
+                            //       "Banh":{id: 4, subs: [{id:8, name:"Banh1"}, {id:9, name:"Banh2"}]},
+                            //     },
+                            //
+                            const subMenusSecond = [];
+                            let curItem = menuToDisplay[""+propD]
+                            for (var propD2 in curItem) {
+                                if (Object.prototype.hasOwnProperty.call(curItem, propD2)) {
+                                    if (propD2 != "id") {
+                                        const subMenuItems = [];
+                                        // curMenuLvl is {id: 4, subs: [{id:8, name:"Banh1"}, {id:9, name:"Banh2"}]},
+                                        let curMenuLvl = curItem[""+propD2];
+                                        if (curMenuLvl.subs && curMenuLvl.subs.length > 0) {
+                                            curMenuLvl.subs.forEach(element => {
+                                                subMenuItems.push(
+                                                    <Menu.Item key={element.id} 
+                                                    className={element.id==curID ? styles['sidemenu-cate-selected'] : ""}>
+                                                        <Link href="/category/[id]" as={`/category/${element.id}`}>
+                                                        {element.name}
+                                                        </Link>
+                                                    </Menu.Item>
+                                                );
+                                            });
+                                        }
+                                        subMenusSecond.push(
+                                            <SubMenu
+                                            key={curMenuLvl.id}
+                                            className={curMenuLvl.id==curID ? styles['sidemenu-cate-selected'] : ""}
+                                            title={
+                                                <Link href="/category/[id]" as={`/category/${curMenuLvl.id}`}>
+                                                {propD2}
+                                                </Link>
+                                            }>
+                                                {subMenuItems}
+                                            </SubMenu>
+                                        );
+                                    }
+                                }
+                            }
 
-                });
+                            subMenusFirst.push(
+                                <SubMenu
+                                key={curItem.id}
+                                className={curItem.id==curID ? styles['sidemenu-cate-selected'] : ""}
+                                title={
+                                    <Link href="/category/[id]" as={`/category/${curItem.id}`}>
+                                    {propD}
+                                    </Link>
+                                }>
+                                {subMenusSecond}
+                                </SubMenu>
+                            );
+                        }
+                    }
+                }
+
             }
 
             // this.props.category.categories.forEach((item, idx) => {
@@ -80,10 +153,10 @@ class SideMenu extends Component {
             // using defaultOpenKeys because if not, user cannot Open menu
             return (
                 <div>
-                    <div className="ant-card ant-card-small" style={{borderRight:"1px solid #e8e8e8"}}>
-                    <div className="ant-card-head app-card-head">
-                        <div className="ant-card-head-wrapper">
-                            <div className="ant-card-head-title">
+                    <div className={styles['ant-card ant-card-small']} style={{borderRight:"1px solid #e8e8e8"}}>
+                    <div className={styles['ant-card-head app-card-head']}>
+                        <div className={styles['ant-card-head-wrapper']}>
+                            <div className={styles['ant-card-head-title']}>
                             Danh Muc San Pham
                             </div>
                         </div>
@@ -94,10 +167,10 @@ class SideMenu extends Component {
                         openKeys={openKeys}
                         mode="inline"
                         inlineIndent={20}
-                        onClick={console.log("onCliekMenu")}
+                        onClick={this.onSideMenuItemClick}
                         style={{borderTop:"1px solid #e8e8e8", paddingTop:"0px"}}
                     >
-                        {subMenusSecond}
+                        {subMenusFirst}
                     </Menu>
                 </div>
             );

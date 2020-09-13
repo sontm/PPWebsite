@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { Card, Row, Col, Button } from 'antd';
 import helpers from '../util/Helpers'
-import { increaseCart } from '../redux/store';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -54,7 +53,7 @@ function ProductWrapper(param) {
 
             <div className={styles['empty-space-36pxheight']} />
             
-            <Button type="primary" className={styles['btn-addtocart']} onClick={param.increaseCart}>Add to Cart</Button>
+            <Button type="primary" className={styles['btn-addtocart']} onClick={console.log("param.increaseCart")}>Add to Cart</Button>
             
         </Card>
     )
@@ -63,9 +62,10 @@ function ProductWrapper(param) {
 
 const mapStateToProps = (state) => (state);
 const mapDispatchToProps = (dispatch) => {
-    return {
-        increaseCart: bindActionCreators(increaseCart, dispatch),
-    }
+    // return {
+    //     increaseCart: bindActionCreators(increaseCart, dispatch),
+    // }
+    return {};
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(ProductWrapper)

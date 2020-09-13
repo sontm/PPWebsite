@@ -133,32 +133,7 @@ export function getMatchLeaderOfUser(teams, username) {
     }
   }
 
-// {id: 1, name: "Bánh Keo", desc: null, active: true, order: null, parentCategoryId:null}
-// {id: 4, name: "Bánh", desc: null, active: true, order: null, parentCategoryId:1}
 
-// Output:
-// const menuData = {
-//     "BanhKeo":{
-//       "id": 1,
-//       "Banh":{id: 4, subs: [{id:8, name:"Banh1"}, {id:9, name:"Banh2"}]},
-//     },
-
-// TODO for complicated categories
-export function levelingCategory(cateList) {
-    let result = [];
-    // Filter with item have prod_categories > 0 and item have prod_category is null
-
-    // Get Level 1
-    if (cateList && cateList.length > 0) {
-        cateList.forEach((element, idx) => {
-            if (!element.prod_category) {
-                // First Level Category
-                result.push(element);
-            }
-        });
-    }
-    return result;
-}
 
 // If intoList is true, will break into List
 export function breakLineCRLF(text, intoList) {
@@ -731,6 +706,70 @@ class Helpers {
         result.discounts = discounts;
         result.bestCoupon = bestCoPercentOrFix;
         result.couponUnit = curCouponUnit;
+        return result;
+    }
+
+    // {id: 1, Name: "Bánh Keo", prod_category:{id, Name}, prod_categories[{id, Name}]}
+
+    // Output:
+    // const menuData = {
+    //     "BanhKeo":{
+    //       "id": 1,
+    //       "Banh":{id: 4, subs: [{id:8, name:"Banh1"}, {id:9, name:"Banh2"}]},
+    //     },
+
+    levelingCategory(cateList) {
+        console.log("levelingCategory------");
+        let result = {};
+        // Get Level 1
+        if (cateList && cateList.length > 0) {
+            cateList.forEach((element, idx) => {
+                if (!element.prod_category) {
+                    // First Level Category
+                    result[""+element.Name] = {id:element.id}
+                }
+            });
+        }
+        // Get Level 2
+        for (var prop in result) {
+            if (Object.prototype.hasOwnProperty.call(result, prop)) {
+                let curCate = result[prop]
+                // Find Level 2 Category which parent ID is equal
+                if (cateList && cateList.length > 0) {
+                    cateList.forEach((element, idx) => {
+                        if (element.prod_category && element.prod_category.id == curCate.id) {
+                            // First Level Category
+                            curCate[""+element.Name] = {id:element.id, subs:[]}
+                        }
+                    });
+                }
+            }
+        }
+        // Get Level 3
+        for (var prop in result) {
+            if (Object.prototype.hasOwnProperty.call(result, prop)) {
+                let curCate = result[prop]
+                // Loop level 2 except id
+                for (var propSub in curCate) {
+                    if (Object.prototype.hasOwnProperty.call(curCate, propSub)) {
+                        if (propSub != "id") {
+                            let curSubCate = curCate[propSub]
+                            if (cateList && cateList.length > 0) {
+                                cateList.forEach((element, idx) => {
+                                    // Find Level 3 Category which parent ID is equal
+                                    if (element.prod_category && element.prod_category.id == curSubCate.id) {
+                                        // First Level Category
+                                        curSubCate["subs"].push({id: element.id, name:element.Name})
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+        console.log(result)
         return result;
     }
 }

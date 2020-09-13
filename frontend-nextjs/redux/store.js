@@ -1,7 +1,8 @@
-import { useMemo } from 'react'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { HYDRATE, createWrapper } from 'next-redux-wrapper'
 import thunkMiddleware from 'redux-thunk'
+
+import siteInfo from './SiteInfoReducer';
 
 const bindMiddleware = (middleware) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -11,29 +12,9 @@ const bindMiddleware = (middleware) => {
   return applyMiddleware(...middleware)
 }
 
-export const increaseCart = () => (dispatch) => {
-  return dispatch({
-    type: 'INCREASE_CART',
-  })
-}
-
-let store
-
-const initialState = {
-  cartNum: 3
-}
-
-const modalReducer = (state = initialState, action) => {
-  switch (action.type) {
-      case 'INCREASE_CART':
-          return {...state, cartNum: state.cartNum+1};
-      default:
-          return state
-  }
-};
 
 const combinedReducer = combineReducers({
-  modalReducer
+  siteInfo
 })
 
 const reducer = (state, action) => {

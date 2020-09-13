@@ -9,7 +9,7 @@ import React from 'react';
 
 import { Row, Col, Radio, Button, Input, Select } from 'antd';
 import Icon from '@ant-design/icons';
-import {levelingCategory} from '../../util/Helpers'
+import Helpers from '../../util/Helpers'
 
 import ProductWrapper from '../../components/ProductWrapper';
 const SideMenu = dynamic(() => import('../../components/SideMenu'))
@@ -64,8 +64,6 @@ export async function getStaticPaths() {
         }
         }
     })
-    console.log("paths-----------------------------")
-    console.log(paths)
     return {
         paths,
         fallback: false
@@ -82,7 +80,7 @@ export async function getStaticProps({ params }) {
     // Get List of Categories
     const resAllCate = await axios.get(process.env.API_URL+"/prod-categories")
     const categories = await resAllCate.data;
-    const categoriesLevel = levelingCategory(categories);
+    const categoriesLevel = Helpers.levelingCategory(categories);
 
     return {
         props: {

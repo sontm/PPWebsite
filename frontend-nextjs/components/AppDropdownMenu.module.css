@@ -1,0 +1,156 @@
+ /* OVerride COlor a of Link  */
+ .flyout-container-display a {
+    display: block;
+    color: rgb(5, 5, 5);
+}
+
+.parent-menu-container {
+    display: block;
+    margin-top: 0px;
+    width: 96%;
+    /* background: rgb(240, 240, 240); */
+
+    margin-left: 2%;
+    margin-right: 2%;
+}
+.flyout-container-display-home a {
+    display: block;
+    color: rgb(5, 5, 5);
+}
+@media (max-width : 768px) {
+    .flyout-container-display-home {
+        display: block;
+        width: 96%;
+        height: 0px;
+        overflow: hidden;
+    }
+}
+
+
+
+
+.flyout-container-hidden {
+    display: none;
+}
+.flyout-container-display {
+    /* display: block; */
+    overflow: hidden;
+    position: absolute;
+    margin-top: 0px;
+    z-index: 100;
+    width: 90%;
+    /* background: rgb(240, 240, 240); */
+    min-height: 200px;
+}
+
+.parent-menu-container-left {
+    /* border-right: 0.2px solid grey; */
+    /* background: #189eff; */
+    background: white;
+    text-align: center;
+    z-index: 100;
+    /* This is for same height on a Row, parent need overflow: hidden; */
+    /* margin-bottom: -99999px;
+    padding-bottom: 99999px; */
+    border: 1px solid #e8e8e8;
+    /* box-shadow: 5px 16px 30px rgba(0, 0, 0, 0.1); */
+    /* background-color: #f7fcfe !important; */
+
+    height: 400px;
+}
+.parent-menu-container-right {
+    background: white;
+    border: 1px solid #e8e8e8;
+    z-index: 100;
+    /* This is for same height on a Row, parent need  */
+    /* margin-bottom: -99999px;
+    padding-bottom: 99999px; */
+    box-shadow: -2px 0px 10px rgba(0, 0, 0, 0.1);
+
+    padding-left: 34px;
+
+    height: 400px;
+}
+
+.parent-menu-container-right-hidden {
+    display: none;
+}
+
+.parent-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: gray;
+}
+/* .parent-menu a {
+    display: block;
+    color: white;
+} */
+
+.parent-menu li {
+    display: block;
+    position: relative;
+    width: 100%;
+    /* float: left; No need Center Horizontal
+    clear: left; */
+    line-height: 40px;
+    text-decoration: none;
+
+    text-align: left;
+    padding-left: 12px;
+    font-size: 1.1em;
+}
+
+
+.parent-menu-li-hovering {
+    background-color:#e6f7ff !important;
+    color: gray;
+}
+.parent-menu li:hover {
+    font-size: 1.2em;
+}
+/* .parent-menu-li-hovering  a {
+    display: block;
+    color: white;
+} */
+
+.sub-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.sub-menu-top-li {
+    display: block;
+    position: relative;
+    float: left;
+    clear: left;
+    line-height: 30px;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+.sub-menu-top-li:hover {
+    font-size: 1.2em;
+}
+
+.sub-menu li {
+    display: block;
+    position: relative;
+    float: left;
+    clear: left;
+    line-height: 30px;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+.sub-menu li:hover {
+    display: block;
+    position: relative;
+    float: left;
+    clear: left;
+    line-height: 30px;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+  

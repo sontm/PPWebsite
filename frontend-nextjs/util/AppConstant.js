@@ -1,10 +1,10 @@
-const LOCAL_RECENT_VIEWED = "LOCAL_RECENT_VIEWED";
-const LOCAL_CART_ADDED = "LOCAL_CART_ADDED";
-const LOCAL_JWT_TOKEN = "LOCAL_JWT_TOKEN";
-const LOCAL_CSRF_TOKEN = "LOCAL_CSRF_TOKEN";
+export const LOCAL_RECENT_VIEWED = "LOCAL_RECENT_VIEWED";
+export const LOCAL_CART_ADDED = "LOCAL_CART_ADDED";
+export const LOCAL_JWT_TOKEN = "LOCAL_JWT_TOKEN";
+export const LOCAL_CSRF_TOKEN = "LOCAL_CSRF_TOKEN";
 
-const CONFIG_PRICE_DIVIDED_RANGE = 5;
-const CONFIG_PRICE_ROUNDUP_TO = 10000;
+export const CONFIG_PRICE_DIVIDED_RANGE = 5;
+export const CONFIG_PRICE_ROUNDUP_TO = 10000;
 
 export const API_BASE_URL = 'http://localhost:4000/graphql';
 export const ACCESS_TOKEN = 'accessToken';
@@ -32,25 +32,14 @@ export const DISCOUNT_TYPE_COUPON = "coupon";
 export const DISCOUNT_TYPE_GIFT = "gift";
 
 
-
+let API_URL = "http://localhost:30010";
+if (process.env.API_URL) {
+    API_URL = process.env.API_URL;
+}
+console.log("@@@@@@@@@@@@@@@@@@@@ API_URL:" + API_URL)
 export default class AppConstants  {
-    static get LOCAL_RECENT_VIEWED() {
-        return LOCAL_RECENT_VIEWED;
-    }
-    static get LOCAL_CART_ADDED() {
-        return LOCAL_CART_ADDED;
-    }
-    static get LOCAL_JWT_TOKEN() {
-        return LOCAL_JWT_TOKEN;
-    }
-    static get LOCAL_CSRF_TOKEN() {
-        return LOCAL_CSRF_TOKEN;
-    }
-    static get CONFIG_PRICE_DIVIDED_RANGE() {
-        return CONFIG_PRICE_DIVIDED_RANGE;
-    }
-    static get CONFIG_PRICE_ROUNDUP_TO() {
-        return CONFIG_PRICE_ROUNDUP_TO;
+    static get API_URL() {
+        return API_URL;
     }
 
     static addProductToRecentView(id) {
