@@ -18,6 +18,11 @@ brew tap mongodb/brew[id]
 brew install mongodb-community@4.4
 brew services start mongodb-community@4.4
 
+## DUmp and Restore MONGODB
+
+mongodump --db=ppcms --out=./
+mongorestore --db=ppcms ./ppcms --username=root  --authenticationDatabase=admin
+
 ## Strapi application
 https://strapi.io/documentation/3.0.0-beta.x/guides/registering-a-field-in-admin.html
 https://github.com/strapi/strapi/issues/4369
