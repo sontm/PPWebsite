@@ -83,6 +83,101 @@ class AppHeader extends React.Component {
   }
 
 
+
+  renderPopoverUser() {
+    if (this.props.user.isLogined && this.props.user.userProfile && this.props.user.userProfile.id) {
+      return (
+        <div style={{textAlign: "center", width: "200px"}}>
+          <Row>
+          <Link href="/customer/orders">
+            <Button type="link" style={{width: "100%", marginBottom: "10px"}}>
+              <span style={{width: "100%", textAlign: "left"}}>
+              Đơn Hàng Của Tôi
+              </span>
+            </Button></Link>
+          </Row>
+          <Row>
+          <Link href="/customer/profile">
+            <Button type="link" style={{width: "100%", marginBottom: "10px"}}>
+              <span style={{width: "100%", textAlign: "left"}}>
+              Tài Khoản
+              </span>
+            </Button>
+          </Link>
+          </Row>
+          <Row>
+          <Link href="/customer/addressbook">
+            <Button type="link" style={{width: "100%", marginBottom: "10px"}}>
+              <span style={{width: "100%", textAlign: "left"}}>
+              Địa Chỉ
+              </span>
+            </Button>
+          </Link>
+          </Row>
+          <Row>
+          <Link href="/customer/favorites">
+            <Button type="link" style={{width: "100%", marginBottom: "10px"}}>
+              <span style={{width: "100%", textAlign: "left"}}>
+              Sản Phẩm Yêu Thích
+              </span>
+            </Button>
+          </Link>
+          </Row>
+          <Row>
+          <Link href="/customer/recentviews">
+            <Button type="link" style={{width: "100%", marginBottom: "10px"}}>
+              <span style={{width: "100%", textAlign: "left"}}>
+              Sản Phẩm Xem Gần Đây
+              </span>
+            </Button>
+          </Link>
+          </Row>
+
+          <Row>
+            <Button type="link" style={{width: "100%", marginBottom: "10px"}} onClick={this.handleLogout}>
+              <span style={{width: "100%", textAlign: "left"}}>
+              Đăng Xuất
+              </span>
+            </Button>
+          </Row>
+        </div>
+      )
+    } else {
+      return (
+        <div style={{textAlign: "center", width: "200px"}}>
+        <Row>
+        <Link href="/login">
+          <Button type="primary" size="large" style={{width: "100%", marginBottom: "10px"}}>Đăng Nhập</Button>
+        </Link>
+        </Row>
+        <Row>
+        <Link href="/register">
+          <Button type="primary" size="large" style={{width: "100%", marginBottom: "10px"}}>Đăng Ký Tài Khoản</Button>
+        </Link>
+
+        {/* <Row>
+          <FacebookLogin
+            appId={process.env.REACT_APP_FB_APPID}
+            autoLoad={false}
+            fields="name,email,picture"
+            callback={this.facebookResponse} />
+        </Row>
+
+        <Row>
+          <GoogleLogin
+              clientId={process.env.REACT_APP_GOOGLE_CLIENTID}
+              buttonText="Login With Google"
+              onSuccess={this.googleResponse}
+              onFailure={this.onGoogleFailure}
+          />
+        </Row> */}
+        </Row>
+      </div>
+      );
+    }
+  }
+
+
   render() {
     let isHomePage = this.props.isHome;
     this.isHomePage = isHomePage;
@@ -136,11 +231,13 @@ class AppHeader extends React.Component {
                 </Col>
                 <Col md={7} lg={7} xl={7} xxl={7}>
                 <div className={styles['top-header-menu-item']}>
-                <Popover content={"this.renderPopoverUser()"} placement="bottom">
+                <Popover content={this.renderPopoverUser()} placement="bottom">
                   <Button type="link" size="large">
                     <UserOutlined  style={{fontSize:"1.2em", color:"white"}} className={styles['show-only-in-md']}/>
                     <span className={styles['hidden-in-md']} style={{color: "white"}}>
-                      {"Tài Khoản"}
+                      {this.props.user.userProfile ? 
+                        (this.props.user.userProfile.firstName + this.props.user.userProfile.lastName) 
+                        : "Tài Khoản"}
                     </span>
                   </Button>
                 </Popover>

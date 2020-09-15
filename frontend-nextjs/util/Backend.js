@@ -10,22 +10,40 @@ class Backend {
             var headers = {
                             'Content-Type': 'application/json',
                             // 'Access-Control-Allow-Credentials':true, // CORS error ??
-                            'Authorization': 'CSRF-TOKEN ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
+                            //'Authorization': 'CSRF-TOKEN ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
+                            'Authorization': 'Bearer ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
                         };
         } else {
             var headers = {
                 'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Credentials':true
+                'Access-Control-Allow-Credentials':false,
             };
         }
         return headers;
     }
 
-    // Category-Brands---------------------------------------
+    // -------------------------------Category-Brands---------------------------------------
     getAllCategories(onOK, onError) {
         console.log("getAllCategories")
         console.log("  " + AppConstants.API_URL + "/prod-categories")
         axios.get(AppConstants.API_URL + "/prod-categories",
+            { headers: this.createHeader()})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    // -------------------------------USER---------------------------------------
+    login({username, password}, onOK, onError) {
+        axios.post("http://localhost:8080/auth/login",
+            JSON.stringify({'email': username, 'password': password}),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader()})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    getUserProfile(onOK, onError) {
+        axios.get("http://localhost:8080/profile",
             { headers: this.createHeader()})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});

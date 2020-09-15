@@ -28,19 +28,6 @@ export default class Home extends React.Component {
           </p>
         </section>
 
-        <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-          <h2 className={utilStyles.headingLg}>Blog</h2>
-          <ul className={utilStyles.list}>
-            {this.props.data && this.props.data.map(({ id, Name }) => (
-              <li className={utilStyles.listItem} key={id}>
-                <Link href="/products/[id]" as={`/products/${id}`}>
-                  <a>{Name}</a>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
         <Button type="primary">
           Primary
         </Button>

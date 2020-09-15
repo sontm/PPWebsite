@@ -8,14 +8,19 @@ import AppHeader from './AppHeader';
 import { Layout, Row, Col, BackTop } from 'antd';
 
 import {actClientCategoryGet} from '../redux/SiteInfoReducer';
+import {actUserGetProfile} from '../redux/UserReducer';
 
 const { Content, Header, Sider, Footer } = Layout;
 
 //{children, home}
 class MyLayout extends Component {
+
+  // First Function Called When Refresh page
   componentDidMount () {
     console.log("---->Layout DidMount!")
     this.props.actClientCategoryGet();
+
+    this.props.actUserGetProfile();
   }
   render () {
     console.log("---->Layout render!, isHome:" + this.props.home)
@@ -45,6 +50,7 @@ const mapStateToProps = (state) => (state);
 const mapDispatchToProps = (dispatch) => {
     return {
       actClientCategoryGet: bindActionCreators(actClientCategoryGet, dispatch),
+      actUserGetProfile: bindActionCreators(actUserGetProfile, dispatch),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MyLayout)

@@ -3,6 +3,7 @@ import { HYDRATE, createWrapper } from 'next-redux-wrapper'
 import thunkMiddleware from 'redux-thunk'
 
 import siteInfo from './SiteInfoReducer';
+import user from './UserReducer';
 
 const bindMiddleware = (middleware) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -14,7 +15,8 @@ const bindMiddleware = (middleware) => {
 
 
 const combinedReducer = combineReducers({
-  siteInfo
+  siteInfo,
+  user
 })
 
 const reducer = (state, action) => {
