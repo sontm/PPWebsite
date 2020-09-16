@@ -132,6 +132,46 @@ export const actUserGetProfile = () => (dispatch) => {
 }
 
 
+
+export const actUserUpdateCartItem = (userId, product, isRemoved = false) => (dispatch) => {
+    console.log("  actUserUpdateCartItem:" + userId)
+    console.log(product)
+    if (!isRemoved) {
+        Backend.addUserCartItem(userId, product,
+            response => {
+                console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                console.log(response.data)
+                dispatch({
+                    type: USER_UPDATE_CARTITEM,
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("addUserCartItem error")
+            }); 
+    } else {
+        Backend.deleteUserCartItem(userId, product,
+            response => {
+                console.log("deleteUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                console.log(response.data)
+                dispatch({
+                    type: USER_UPDATE_CARTITEM,
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("deleteUserCartItem error")
+            }); 
+    }
+}
+
+
+
+
+
+
+
+
 export const actUserAddRecentViews = (userId, productId) => (dispatch) => {
     console.log("  actUserAddRecentViews:" + userId + ",productId:" + productId)
     Backend.addUserRecentViews(userId, productId,
@@ -191,36 +231,6 @@ export const actUserGetFavorites = (userId) => (dispatch) => {
 
 
 
-export const actUserUpdateCartItem = (userId, productId, quantity, isRemoved = false) => (dispatch) => {
-    console.log("  actUserUpdateCartItem:" + userId + ",productId:" + productId, ",quantity:" + quantity)
-    if (!isRemoved) {
-        Backend.addUserCartItem(userId, productId,quantity,
-            response => {
-                console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-                console.log(response.data)
-                dispatch({
-                    type: USER_UPDATE_CARTITEM,
-                    payload:  response.data
-                });
-            },
-            error => {
-                console.log("addUserCartItem error")
-            }); 
-    } else {
-        Backend.deleteUserCartItem(userId, productId,
-            response => {
-                console.log("deleteUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-                console.log(response.data)
-                dispatch({
-                    type: USER_UPDATE_CARTITEM,
-                    payload:  response.data
-                });
-            },
-            error => {
-                console.log("deleteUserCartItem error")
-            }); 
-    }
-}
 export const actUserGetCartItems = (userId) => (dispatch) => {
     console.log("  actUserGetCartItems")
     Backend.getUserCartItems(userId,

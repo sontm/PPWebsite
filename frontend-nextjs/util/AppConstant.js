@@ -32,7 +32,7 @@ export const DISCOUNT_TYPE_COUPON = "coupon";
 export const DISCOUNT_TYPE_GIFT = "gift";
 
 
-let API_URL = "http://localhost:30010";
+let API_URL = "http://localhost:1337";
 if (process.env.API_URL) {
     API_URL = process.env.API_URL;
 }

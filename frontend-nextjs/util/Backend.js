@@ -11,12 +11,12 @@ class Backend {
                             'Content-Type': 'application/json',
                             // 'Access-Control-Allow-Credentials':true, // CORS error ??
                             //'Authorization': 'CSRF-TOKEN ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
-                            'Authorization': 'Bearer ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
+                            //'Authorization': 'Bearer ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
                         };
         } else {
             var headers = {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Credentials':false,
+                //'Access-Control-Allow-Credentials':false,
             };
         }
         return headers;
@@ -45,6 +45,16 @@ class Backend {
     getUserProfile(onOK, onError) {
         axios.get("http://localhost:8080/profile",
             { headers: this.createHeader()})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    
+    //product {id, name, quantity, oldPrice, newPrice, discountPercent}
+    addUserCartItem(userId, product, onOK, onError) {
+        axios.post("http://localhost:5000" + "/order/cart",
+            JSON.stringify({'userId': userId, 'product': product}),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
