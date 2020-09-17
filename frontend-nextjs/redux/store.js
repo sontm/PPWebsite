@@ -4,6 +4,7 @@ import thunkMiddleware from 'redux-thunk'
 
 import siteInfo from './SiteInfoReducer';
 import user from './UserReducer';
+import product from './ProductReducer';
 
 const bindMiddleware = (middleware) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -16,7 +17,8 @@ const bindMiddleware = (middleware) => {
 
 const combinedReducer = combineReducers({
   siteInfo,
-  user
+  user,
+  product
 })
 
 const reducer = (state, action) => {

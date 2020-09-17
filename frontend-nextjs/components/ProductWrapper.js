@@ -18,16 +18,11 @@ class ProductWrapper extends React.Component {
         console.log("onAddToCart:" + this.props.product.name)
         // Stop onLick of parent to go Product Detail
         e.stopPropagation()
-        this.props.actUserUpdateCartItem(//this.props.user.userProfile.id ,
-            "test",
-            {
-                id: this.props.product.id,
-                name: this.props.product.Name, 
-                quantity: 1, 
-                oldPrice: this.props.product.UnitPrice, 
-                newPrice: this.props.product.UnitPrice * 0.9, 
-                discountPercent: 10
-            })
+        this.props.actUserUpdateCartItem(
+            this.props.user.userProfile.id ,
+            this.props.product.id,
+            1
+            )
         if (this.props.user.isLogined) {
             //this.props.actUserUpdateCartItem(this.props.user.userProfile.id ,this.props.product.id, 1)
         } else {

@@ -133,11 +133,10 @@ export const actUserGetProfile = () => (dispatch) => {
 
 
 
-export const actUserUpdateCartItem = (userId, product, isRemoved = false) => (dispatch) => {
-    console.log("  actUserUpdateCartItem:" + userId)
-    console.log(product)
+export const actUserUpdateCartItem = (userId, productId, quantity, isRemoved = false) => (dispatch) => {
+    console.log("  actUserUpdateCartItem:" + userId + ",productId:" + productId)
     if (!isRemoved) {
-        Backend.addUserCartItem(userId, product,
+        Backend.addUserCartItem(userId, productId, quantity,
             response => {
                 console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
                 console.log(response.data)
@@ -150,7 +149,7 @@ export const actUserUpdateCartItem = (userId, product, isRemoved = false) => (di
                 console.log("addUserCartItem error")
             }); 
     } else {
-        Backend.deleteUserCartItem(userId, product,
+        Backend.deleteUserCartItem(userId, productId,
             response => {
                 console.log("deleteUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
                 console.log(response.data)
@@ -163,6 +162,22 @@ export const actUserUpdateCartItem = (userId, product, isRemoved = false) => (di
                 console.log("deleteUserCartItem error")
             }); 
     }
+}
+
+export const actUserGetCartItems = (userId) => (dispatch) => {
+    console.log("  actUserGetCartItems")
+    Backend.getUserCartItems(userId,
+        response => {
+            console.log("actUserGetCartItems Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+            console.log(response.data)
+            dispatch({
+                type: USER_GET_CARTITEMS,
+                payload:  response.data
+            });
+        },
+        error => {
+            console.log("actUserGetCartItems error")
+        }); 
 }
 
 
@@ -229,23 +244,6 @@ export const actUserGetFavorites = (userId) => (dispatch) => {
 }
 
 
-
-
-export const actUserGetCartItems = (userId) => (dispatch) => {
-    console.log("  actUserGetCartItems")
-    Backend.getUserCartItems(userId,
-        response => {
-            console.log("actUserGetCartItems Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-            console.log(response.data)
-            dispatch({
-                type: USER_GET_CARTITEMS,
-                payload:  response.data
-            });
-        },
-        error => {
-            console.log("actUserGetCartItems error")
-        }); 
-}
 
 export const actUserAddAddress = (values, userId, history) => (dispatch) => {
     console.log("  actUserAddAddress")

@@ -4,6 +4,13 @@ import AppConstants, {LOCAL_CSRF_TOKEN} from './AppConstant'
 class Backend {
     constructor() {
     }
+    createHeaderNoAuth() {
+        //if(Cookies.get('XSRF-TOKEN')) {
+        var headers = {
+            'Content-Type': 'application/json',
+        };
+        return headers;
+    }
     createHeader() {
         //if(Cookies.get('XSRF-TOKEN')) {
         if (localStorage.getItem(LOCAL_CSRF_TOKEN)) {
@@ -11,7 +18,7 @@ class Backend {
                             'Content-Type': 'application/json',
                             // 'Access-Control-Allow-Credentials':true, // CORS error ??
                             //'Authorization': 'CSRF-TOKEN ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
-                            //'Authorization': 'Bearer ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
+                            'Authorization': 'Bearer ' + localStorage.getItem(LOCAL_CSRF_TOKEN)
                         };
         } else {
             var headers = {
@@ -27,7 +34,7 @@ class Backend {
         console.log("getAllCategories")
         console.log("  " + AppConstants.API_URL + "/prod-categories")
         axios.get(AppConstants.API_URL + "/prod-categories",
-            { headers: this.createHeader()})
+            { headers: this.createHeaderNoAuth()}) // TODO for no AUTH here
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
@@ -50,11 +57,35 @@ class Backend {
     }
     
     //product {id, name, quantity, oldPrice, newPrice, discountPercent}
-    addUserCartItem(userId, product, onOK, onError) {
+    addUserCartItem(userId, productId, quantity, onOK, onError) {
         axios.post("http://localhost:5000" + "/order/cart",
-            JSON.stringify({'userId': userId, 'product': product}),
+            JSON.stringify({'userId': userId, 'productId': productId, 'quantity': quantity}),
            // { headers: this.createHeader(), withCredentials: true})
-            { headers: this.createHeader(),})
+            { headers: this.createHeaderNoAuth(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    getUserCartItems(userId, onOK, onError) {
+        axios.get("http://localhost:5000" + "/order/cart/" + userId,
+            { headers: this.createHeaderNoAuth(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+
+
+    getSomeProducts(productIds, onOK, onError) {
+        let queryStr = "";
+        productIds.forEach((element, idx) => {
+            if (idx == 0) {
+                queryStr += "?id_in=" + element;
+            } else {
+                queryStr += "&id_in=" + element;
+            }
+        });
+        axios.get(AppConstants.API_URL + "/prod-products" + queryStr,
+            { headers: this.createHeaderNoAuth()})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }

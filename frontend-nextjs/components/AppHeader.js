@@ -250,7 +250,7 @@ class AppHeader extends React.Component {
                   <Button  ghost size="large">
                     <ShoppingCartOutlined style={{fontSize:"1.2em", color:"white"}} className={styles['show-only-in-md']}/>
                     <span className={styles['hidden-in-md']}>Giỏ Hàng</span>
-                    <Badge showZero count={1} 
+                    <Badge showZero count={this.props.user.cartItems ? this.props.user.cartItems.length : 0} 
                       className={styles['cart-badge']}/>
                   </Button>
                   </Link>
