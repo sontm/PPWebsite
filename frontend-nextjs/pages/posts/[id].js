@@ -22,7 +22,7 @@ export default function Post({ data }) {
 
 export async function getStaticPaths() {
     // Return a list of possible value for id
-    const res = await axios.get(process.env.API_URL+"/app-news")
+    const res = await axios.get(AppConstants.API_CMS_URL+"/app-news")
     const arrNews = await res.data
     const paths = arrNews.map(n => {
         return {
@@ -41,7 +41,7 @@ export async function getStaticProps({ params }) {
     // Fetch necessary data for the blog post using params.id
     console.log("Params---------------------------------")
     console.log(params)
-    const res = await axios.get(process.env.API_URL+"/app-news/"+ params.id)
+    const res = await axios.get(AppConstants.API_CMS_URL+"/app-news/"+ params.id)
     const newsData = await res.data
     console.log(newsData)
     return {

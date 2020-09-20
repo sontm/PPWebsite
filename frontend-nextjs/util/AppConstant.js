@@ -32,14 +32,21 @@ export const DISCOUNT_TYPE_COUPON = "coupon";
 export const DISCOUNT_TYPE_GIFT = "gift";
 
 
-let API_URL = "http://localhost:1337";
-if (process.env.API_URL) {
-    API_URL = process.env.API_URL;
-}
-console.log("@@@@@@@@@@@@@@@@@@@@ API_URL:" + API_URL)
 export default class AppConstants  {
-    static get API_URL() {
-        return API_URL;
+    static get API_AUTH_URL() {
+        return "http://localhost";
+    }
+    static get API_CMS_URL() {
+        // For Products, Categories
+        return "http://localhost/cms";
+    }
+    static get API_USER_URL() {
+        // For Profile...
+        return "http://localhost/account/admin";
+    }
+    static get API_ORDER_URL() {
+        // Carts, Orders
+        return "http://localhost/user";
     }
 
     static addProductToRecentView(id) {

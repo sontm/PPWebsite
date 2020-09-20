@@ -55,15 +55,15 @@ export default class Home extends React.Component {
 //   }
 // }
 
-export async function getServerSideProps() {
-  const res = await axios.get(process.env.API_URL+"/prod-products")
-  const data = await res.data
-  return {
-    props: {
-      data
-    }
-  }
-}
+// export async function getServerSideProps() {
+//   const res = await axios.get(process.env.API_URL+"/prod-products")
+//   const data = await res.data
+//   return {
+//     props: {
+//       data
+//     }
+//   }
+// }
 
 // export async function getServerSideProps(context) {
 //   return {

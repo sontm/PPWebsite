@@ -15,12 +15,12 @@ class ProductWrapper extends React.Component {
     }
 
     onAddToCart(e) {
-        console.log("onAddToCart:" + this.props.product.name)
+        console.log("onAddToCart:" + this.props.singleProduct.name)
         // Stop onLick of parent to go Product Detail
         e.stopPropagation()
         this.props.actUserUpdateCartItem(
             this.props.user.userProfile.id ,
-            this.props.product.id,
+            this.props.singleProduct.id,
             1
             )
         if (this.props.user.isLogined) {
@@ -33,8 +33,8 @@ class ProductWrapper extends React.Component {
     }
 
     render() {
-        //console.log(this)
-        let product = this.props.product;
+        console.log("========Wrapper++++++++++")
+        let product = this.props.singleProduct;
         let discountInfo = {hasGift:80, coupon:"XXX"};
         return (
             <Card className={styles['product-wrapper']}>
@@ -51,7 +51,7 @@ class ProductWrapper extends React.Component {
                 
                 <Link href="/products/[id]" as={`/products/${product.id}`}>
                 <a><div className={styles['image-thump']}>
-                    <img src={product.Images[0].formats.thumbnail.url}/>
+                    <img src={(product.Images && product.Images.length > 0) ? product.Images[0].formats.thumbnail.url : ""}/>
                 </div></a>
                 </Link>
                 <div className={styles['product-title']}>

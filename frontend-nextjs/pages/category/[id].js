@@ -12,6 +12,7 @@ import Icon from '@ant-design/icons';
 import Helpers from '../../util/Helpers'
 
 import ProductWrapper from '../../components/ProductWrapper';
+import AppConstants from '../../util/AppConstant';
 const SideMenu = dynamic(() => import('../../components/SideMenu'))
 
 
@@ -26,7 +27,7 @@ export default function Category({ data, categories, curCateId, categoriesLevel 
             //ViewPort: xs <576px,sm	≥576px, md	≥768px, lg	≥992px, xl	≥1200px, xxl≥1600px
             producView.push(
                 <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={6} key={element.id}>
-                    <ProductWrapper product={element}/>
+                    <ProductWrapper singleProduct={element}/>
                 </Col>)
         });
     }
@@ -55,7 +56,7 @@ export default function Category({ data, categories, curCateId, categoriesLevel 
 
 export async function getStaticPaths() {
     // Return a list of possible value for id
-    const res = await axios.get(process.env.API_URL+"/prod-categories")
+    const res = await axios.get(AppConstants.API_CMS_URL+"/prod-categories")
     const arrNews = await res.data
     const paths = arrNews.map(n => {
         return {
@@ -74,11 +75,10 @@ export async function getStaticProps({ params }) {
     // Fetch necessary data for the blog post using params.id
     console.log("--->Category: getStaticProps")
     console.log(params)
-    const res = await axios.get(process.env.API_URL+"/prod-categories/"+ params.id)
+    const res = await axios.get(AppConstants.API_CMS_URL+"/prod-categories/"+ params.id)
     const newsData = await res.data
-
     // Get List of Categories
-    const resAllCate = await axios.get(process.env.API_URL+"/prod-categories")
+    const resAllCate = await axios.get(AppConstants.API_CMS_URL+"/prod-categories")
     const categories = await resAllCate.data;
     const categoriesLevel = Helpers.levelingCategory(categories);
 
