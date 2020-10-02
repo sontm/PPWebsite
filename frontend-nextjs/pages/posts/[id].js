@@ -1,6 +1,7 @@
 import MyLayout from '../../components/layout'
 import Head from 'next/head'
 import axios from "axios";
+import AppConstants from '../../util/AppConstant'
 
 export default function Post({ data }) {
     return (

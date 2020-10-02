@@ -1,0 +1,28 @@
+.product-image-list-ul {
+    list-style:none;
+    display: inline-block;
+}
+.product-image-list {
+    border: 1px solid rgb(210, 210, 210);
+    border-radius: 5px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-right: 7px;
+}
+
+.product-image-list-selected {
+    border: 2.5px solid rgb(93, 147, 213);
+    border-radius: 5px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-right: 5px;
+}
+
+.product-image-list-more {
+    background-color: rgba(0,0,0, 0.65);
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+
+    padding-top: 5px;
+}

@@ -34,19 +34,23 @@ export const DISCOUNT_TYPE_GIFT = "gift";
 
 export default class AppConstants  {
     static get API_AUTH_URL() {
-        return "http://localhost";
+        //return "http://localhost";
+        return "http://localhost:1337";
     }
     static get API_CMS_URL() {
         // For Products, Categories
-        return "http://localhost/cms";
+        // return "http://localhost/cms";
+        return "http://localhost:1337";
     }
     static get API_USER_URL() {
         // For Profile...
-        return "http://localhost/account/admin";
+        //return "http://localhost/account/admin";
+        return "http://localhost:1337";
     }
     static get API_ORDER_URL() {
         // Carts, Orders
-        return "http://localhost/user";
+        //return "http://localhost/user";
+        return "http://localhost:1337";
     }
 
     static addProductToRecentView(id) {

@@ -1,7 +1,7 @@
 // import App from 'next/app'
 import React from 'react';
 import "../styles/antd.less";
-import '../styles/global.css'
+import '../styles/global.css';
 
 import { Provider } from 'react-redux'
 import { wrapper } from '../redux/store'

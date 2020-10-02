@@ -55,3 +55,21 @@ yarn add pg
 
 ## Then add ./config/plugins.js with aws s3
 
+## Strapi Auth Local
+
+auth/local/register: 
+    {
+        "username": "user1",
+        "password": "123456",
+        "email": "user1@gmail.com"
+    }
+
+auth/local: Login 
+    {
+        "identifier": "admin@gmail.com",
+        "password": "123456"
+    }
+    Will return JWT
+
+anyapi
+    Authorization: Bearer JWT
