@@ -24,34 +24,13 @@ const initialState = {
     priceRangeQuery:[],  // [{name: 1, from:1000, to: 2000},{name: 2, from:2000, to: 4000},]
     productDetail: null,
     filter:"popular", // popular, new, discount, lowprice, highprice
-    cartProducts: []
 };
-
-export const actProductGetProductsInCart = (productIds) => (dispatch) => {
-    Backend.getSomeProducts(productIds,
-    response => {
-        console.log("Get Some Product of Cart Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-        console.log(response.data)
-        dispatch({
-            type: PROD_GET_CARTPRODUCT_OK,
-            payload:  response.data
-        });
-    },
-    error => {
-        console.log("Get All Product error")
-    }); 
-}
 
 
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
     switch (action.type) {
-    case PROD_GET_CARTPRODUCT_OK:
-        return {
-            ...state,
-            cartProducts: action.payload
-        };
-    
+
     default:
         return state;
     }

@@ -20,14 +20,14 @@ const queryString = require('query-string');
 const { Search } = Input;
 const { Option } = Select;
 
-export default function Category({ data, categories, curCateId, categoriesLevel }) {
+export default function Category({ data, categories, curCateId, categoriesLevel, brands }) {
     let producView = [];
-    if (data.prod_products.length > 0) {
-        data.prod_products.forEach(element => {
+    if (data.length > 0) {
+        data.forEach(element => {
             //ViewPort: xs <576px,sm	≥576px, md	≥768px, lg	≥992px, xl	≥1200px, xxl≥1600px
             producView.push(
                 <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={6} key={element.id}>
-                    <ProductWrapper singleProduct={element}/>
+                    <ProductWrapper singleProduct={element} categories={categories} brands={brands}/>
                 </Col>)
         });
     }
@@ -75,19 +75,34 @@ export async function getStaticProps({ params }) {
     // Fetch necessary data for the blog post using params.id
     console.log("--->Category: getStaticProps")
     console.log(params)
-    const res = await axios.get(AppConstants.API_CMS_URL+"/prod-categories/"+ params.id)
-    const newsData = await res.data
+    // const res = await axios.get(AppConstants.API_CMS_URL+"/prod-categories/"+ params.id)
+    // const cateData = await res.data
+
+    const resProds = await axios.get(AppConstants.API_CMS_URL+"/prod-products/")
+    const productDatas = await resProds.data
+
+    let data = [];
+    productDatas.forEach(element => {
+        if (element.prod_category.id == params.id) {
+            data.push(element)
+        }
+    });
+
     // Get List of Categories
     const resAllCate = await axios.get(AppConstants.API_CMS_URL+"/prod-categories")
     const categories = await resAllCate.data;
     const categoriesLevel = Helpers.levelingCategory(categories);
 
+    const resAllBrand = await axios.get(AppConstants.API_CMS_URL+"/prod-brands")
+    const brands = await resAllBrand.data;
+
     return {
         props: {
-            data: newsData,
+            data,
             categories,
             categoriesLevel,
-            curCateId: params.id
+            curCateId: params.id,
+            brands
         }
     }
 }

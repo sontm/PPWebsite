@@ -7,9 +7,9 @@ import Head from 'next/head'
 import MyLayout from '../components/layout';
 import {STORAGE_CART_PROD} from '../util/AppConstant'
 import styles from './cart.module.css'
+import helpers from '../util/Helpers'
 
-import {actProductGetProductsInCart} from '../redux/ProductReducer'
-import {actUserGetCartItems} from '../redux/UserReducer'
+import {actUserGetCartItems, actUserGetProductsInCart, actUserDeleteCartItem} from '../redux/UserReducer'
 
 const IconText = ({ type, text }) => (
     <span>
@@ -58,20 +58,19 @@ class CartPage extends Component {
         super(props)
         this.isLoadCartDone = false;
         this.isLoadProdDone = false;
-        //this.handleRemoveCartItem = this.handleRemoveCartItem.bind(this)
+        this.handleRemoveCartItem = this.handleRemoveCartItem.bind(this)
     }
 
-    // handleRemoveCartItem(itemId) {
-    //     console.log("handleRemoveCartItem:" + itemId)
-    //     if (this.props.user.isLogined) {
-    //         console.log("USER CART---------")
-    //         this.props.actUserUpdateCartItem(this.props.user.userProfile.id,
-    //             itemId, 0, true)
-    //     } else {
-    //         console.log("STORAGE CART---------")
-    //         // TODO
-    //     }
-    // }
+    handleRemoveCartItem(itemId) {
+        console.log("handleRemoveCartItem:" + itemId)
+        if (this.props.user.isLogined) {
+            console.log("USER CART---------")
+            this.props.actUserDeleteCartItem(itemId)
+        } else {
+            console.log("STORAGE CART---------")
+            // TODO
+        }
+    }
     componentDidMount() {
         console.log("-----Cart componentDidMount-------")
     }
@@ -87,29 +86,34 @@ class CartPage extends Component {
             // Get products info
             let productIds = [];
             this.props.user.cartItems.forEach(element => {
-                productIds.push(element.productId)
+                console.log(element)
+                productIds.push(element.ProductID)
             });
-            this.props.actProductGetProductsInCart(productIds);
+            console.log("   productIDs")
+            console.log(productIds)
+            this.props.actUserGetProductsInCart(productIds);
             this.isLoadProdDone = true;
         }
     }
     render() {
-        // console.log("STORAGE CART---------")
-        // console.log(localStorage.getItem(STORAGE_CART_PROD))
-        // let idArray = parseStringToArrayProductID(localStorage.getItem(STORAGE_CART_PROD))
-        // console.log(idArray)
-        // this.props.actProductGetProductsInCart(idArray)
-
         let itemTotal = 0;
         let finalTotal = 0;
-        this.props.product.cartProducts.forEach(item => {
-            itemTotal += item.UnitPrice;
-            finalTotal += item.UnitPrice;
+        let cartItems = [...this.props.user.cartItems];
+        cartItems.forEach(item => {
+            if (item.Product) {
+                itemTotal += item.Product.UnitPrice;
+                finalTotal += item.Product.UnitPrice;
+
+                item.discountInfo = helpers.parseDiscountInformation(item.Product, 
+                    this.props.siteInfo.categories, this.props.siteInfo.brands);
+
+            }
         })
 
         console.log("--_Cart Page, cartItems:");
-        console.log(this.props.user.cartItems)
-        console.log(this.props.product.cartProducts)
+        console.log(cartItems)
+
+        
         return (
             <MyLayout>
                 <Head>
@@ -122,78 +126,86 @@ class CartPage extends Component {
                     <List
                         itemLayout="vertical"
                         dataSource={
-                            this.props.user.isLogined ? this.props.product.cartProducts: []}
-                        renderItem={item => (
-                        <List.Item
-                            key={item.id}
-                            actions={[
-                                <Row>
-                                <Button type="link" onClick={e => {
-                                    console.log("this.handleRemoveCartItem(item.id)")
-                                }}>Xoá</Button>,
-                                <Button type="link">Để Dành Mua Sau</Button>,
-                                <div className={styles['product-quantity']}>
-                                    <span className={styles['product-quantity-text']}>&nbsp;&nbsp;Số Lượng (Hộp):&nbsp;&nbsp;</span>
-                                    
-                                    <Input style={{width: "120px", textAlign:"center"}}
-                                        addonBefore={
-                                            <span className="noselect">-</span>
-                                        } 
-                                        addonAfter={
-                                            <span className="noselect">+</span>
-                                        } 
-                                        value={1} />
+                            this.props.user.isLogined ? cartItems: []}
+                        renderItem={item => {
+                            if (item.Product) {
+                            return (<List.Item
+                                key={item.id}
+                                actions={[
+                                    <Row>
+                                    <Button type="link" onClick={e => {
+                                        this.handleRemoveCartItem(item.id)
+                                    }}>Xoá</Button>,
+                                    <Button type="link">Để Dành Mua Sau</Button>,
+                                    <div className={styles['product-quantity']}>
+                                        <span className={styles['product-quantity-text']}>&nbsp;&nbsp;Số Lượng (Hộp):&nbsp;&nbsp;</span>
                                         
-                                </div>
-                                </Row>
-                            ]}
-                            extra={
-                            <img
-                                width={150}
-                                alt="logo"
-                                src={item.Images[0].formats.thumbnail.url}
-                            />
-                            }
-                        >
-                            <List.Item.Meta
-                                title={<Link href="/products/[id]" as={`/products/${item.id}`}>
-                                    {item.Name}
-                                    </Link>}
+                                        <Input style={{width: "120px", textAlign:"center"}}
+                                            addonBefore={
+                                                <span className="noselect">-</span>
+                                            } 
+                                            addonAfter={
+                                                <span className="noselect">+</span>
+                                            } 
+                                            value={item.Quantity} />
+                                            
+                                    </div>
+                                    </Row>
+                                ]}
+                                extra={
+                                <img
+                                    width={150}
+                                    alt="logo"
+                                    src={item.Product.Images[0].formats.thumbnail.url}
+                                />
+                                }
+                            >
+                                <List.Item.Meta
+                                    title={<Link href="/products/[id]" as={`/products/${item.Product.id}`}>
+                                        {item.Product.Name}
+                                        </Link>}
+                                    
+                                    description={
+                                        <div>
+                                            <span>&nbsp;&nbsp;{"Nhãn Hiệu:"}&nbsp;</span>
+                                            {/* <Link to={"/brand/" + item.Product.brands.id}>{item.Product.brands.name}</Link> */}
+                                        </div>}
+                                />
                                 
-                                description={
-                                    <div>
-                                        <span>&nbsp;&nbsp;{"Nhãn Hiệu:"}&nbsp;</span>
-                                        {/* <Link to={"/brand/" + item.brands.id}>{item.brands.name}</Link> */}
-                                    </div>}
-                            />
-                            
-                            <Row>
-                            <Col xs={14} sm={14} md={14} lg={10} xl={10} xxl={10}>
-                            <div className={styles['product-price']}>
-                                {item.UnitPrice}đ
-                            </div>
-                            <div className={styles['product-price-old']}>
-                                {item.UnitPrice}đ
-                            </div>
-                            
-                            <div className={styles['product-price-discount']}>
-                                -27%
-                            </div>
-                            
-                            </Col>
-                            <Col xs={0} sm={0} md={0} lg={4} xl={4} xxl={4}>
+                                <Row>
+                                <Col xs={14} sm={14} md={14} lg={10} xl={10} xxl={10}>
+                                <div className={styles['product-price']}>
+                                    {item.discountInfo ? item.discountInfo.newPrice 
+                                        : item.Product.UnitPrice}đ
+                                </div>
+                                <div className={styles['product-price-old']}>
+                                    {item.discountInfo ? (item.Product.UnitPrice+"đ") : null}
+                                </div>
+                                
+                                <div className={styles['product-price-discount']}>
+                                    {item.discountInfo ? 
+                                        ("-"+item.discountInfo.bestDiscount+item.discountInfo.unit) 
+                                        : null}
+                                </div>
+                                
+                                </Col>
+                                <Col xs={0} sm={0} md={0} lg={4} xl={4} xxl={4}>
 
-                            </Col>
-                            <Col xs={10} sm={10} md={10} lg={10} xl={10} xxl={10}>
-                            <div className={styles['product-sumprice-item']}>
-                                {" x 3 = " + item.UnitPrice * 3 + "đ"}
-                                <span>&nbsp;</span>
-                            </div>
-                            </Col>
-                            </Row>
-                            
-                        </List.Item>
-                        )}
+                                </Col>
+                                <Col xs={10} sm={10} md={10} lg={10} xl={10} xxl={10}>
+                                <div className={styles['product-sumprice-item']}>
+                                    {" x " + item.Quantity + " = " + 
+                                        (item.discountInfo ? item.discountInfo.newPrice: item.Product.UnitPrice) * item.Quantity + "đ"}
+                                    <span>&nbsp;</span>
+                                </div>
+                                </Col>
+                                </Row>
+                                
+                            </List.Item>)
+                            } else {
+                                return null;
+                            }
+                        }}
                     />
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
@@ -224,8 +236,9 @@ class CartPage extends Component {
 const mapStateToProps = (state) => (state);
 const mapDispatchToProps = (dispatch) => {
     return {
-        actProductGetProductsInCart: bindActionCreators(actProductGetProductsInCart, dispatch),
+        actUserGetProductsInCart: bindActionCreators(actUserGetProductsInCart, dispatch),
         actUserGetCartItems: bindActionCreators(actUserGetCartItems, dispatch),
+        actUserDeleteCartItem: bindActionCreators(actUserDeleteCartItem, dispatch),
     }
 }
   

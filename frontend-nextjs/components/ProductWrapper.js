@@ -15,13 +15,13 @@ class ProductWrapper extends React.Component {
     }
 
     onAddToCart(e) {
-        console.log("onAddToCart:" + this.props.singleProduct.name)
+        console.log("onAddToCart:" + this.props.singleProduct.Name)
         // Stop onLick of parent to go Product Detail
         e.stopPropagation()
         this.props.actUserUpdateCartItem(
             this.props.user.userProfile.id ,
             this.props.singleProduct.id,
-            1
+            null
             )
         if (this.props.user.isLogined) {
             //this.props.actUserUpdateCartItem(this.props.user.userProfile.id ,this.props.product.id, 1)
@@ -32,10 +32,14 @@ class ProductWrapper extends React.Component {
         }
     }
 
+    // return {bestDiscount: 23, unit:"%|d", newPrice: 12, hasGift:true, 
+    //      coupon: null|"JP20", bestCoupon:"", couponUnit:"%|K",discounts[]}
     render() {
         console.log("========Wrapper++++++++++")
         let product = this.props.singleProduct;
-        let discountInfo = {hasGift:80, coupon:"XXX"};
+        //let discountInfo = {hasGift:80, coupon:"XXX"};
+        let discountInfo = helpers.parseDiscountInformation(product, 
+            this.props.categories, this.props.brands);
         return (
             <Card className={styles['product-wrapper']}>
                 {discountInfo.hasGift ? (
@@ -61,17 +65,18 @@ class ProductWrapper extends React.Component {
                 </div>
             
                 <div className={styles['product-price']}>
-                    {product.UnitPrice}đ
+                    {discountInfo.newPrice}đ
                 </div>
+                {discountInfo.bestDiscount > 0 ? (
                 <div className={styles['product-price-old']}>
                     {product.UnitPrice + "đ"}
-                </div>
+                </div>) : null }
                 <div className={styles['product-price-discount']}>
                     {discountInfo.bestDiscount > 0 ? ("-" + discountInfo.bestDiscount + discountInfo.unit): ""}
                 </div>
-                <div className={styles['product-quantity']}>
+                {/* <div className={styles['product-quantity']}>
                     {product.StockNumber ? ("x " + product.StockNumber) : null}
-                </div>
+                </div> */}
                 {/* {this.renderDiscountInfos(discountInfo.discounts)} */}
 
                 <div className={styles['empty-space-36pxheight']} />

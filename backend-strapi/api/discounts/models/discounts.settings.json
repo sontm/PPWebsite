@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "discounts",
+  "info": {
+    "name": "Discounts"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "Desc": {
+      "type": "string"
+    },
+    "From": {
+      "type": "datetime"
+    },
+    "To": {
+      "type": "datetime"
+    },
+    "Type": {
+      "type": "string"
+    },
+    "FixMoney": {
+      "type": "biginteger",
+      "default": "0"
+    },
+    "Percent": {
+      "type": "integer",
+      "default": 0
+    },
+    "ApplyProduct": {
+      "model": "prod-product",
+      "via": "discounts"
+    },
+    "ApplyCategory": {
+      "model": "prod-category",
+      "via": "discounts"
+    },
+    "ApplyBrand": {
+      "model": "prod-brand",
+      "via": "discounts"
+    }
+  }
+}

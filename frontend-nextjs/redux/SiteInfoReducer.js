@@ -25,6 +25,22 @@ export const actClientCategoryGet = () => (dispatch) => {
         }); 
 }
 
+export const actClientBrandGet = () => (dispatch) => {
+    Backend.getAllBrands(
+        response => {
+            console.log("Get All Brand OK")
+            console.log(response.data)
+            dispatch({
+                type: 'BRAND_GET_OK',
+                payload:  response.data
+            });
+        },
+        error => {
+            console.log("Get All Brand error")
+            console.log(error)
+        }); 
+}
+
 export default function(state = initialState, action) {
     switch (action.type) {
         case 'CATE_GET_OK':
@@ -35,6 +51,11 @@ export default function(state = initialState, action) {
                 ...state,
                 categories: action.payload,
                 categoriesLevel: categoriesLevel
+            };
+        case 'BRAND_GET_OK':
+            return {
+                ...state,
+                brands: action.payload,
             };
         default:
             return state

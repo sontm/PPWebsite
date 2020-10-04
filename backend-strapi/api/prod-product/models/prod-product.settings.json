@@ -62,6 +62,10 @@
     },
     "ShortDescription": {
       "type": "richtext"
+    },
+    "discounts": {
+      "via": "ApplyProduct",
+      "collection": "discounts"
     }
   }
 }

@@ -133,35 +133,37 @@ export const actUserGetProfile = () => (dispatch) => {
 
 
 
-export const actUserUpdateCartItem = (userId, productId, quantity, isRemoved = false) => (dispatch) => {
+export const actUserUpdateCartItem = (userId, productId, quantity) => (dispatch) => {
     console.log("  actUserUpdateCartItem:" + userId + ",productId:" + productId)
-    if (!isRemoved) {
-        Backend.addUserCartItem(userId, productId, quantity,
-            response => {
-                console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-                console.log(response.data)
-                dispatch({
-                    type: USER_UPDATE_CARTITEM,
-                    payload:  response.data
-                });
-            },
-            error => {
-                console.log("addUserCartItem error")
-            }); 
-    } else {
-        Backend.deleteUserCartItem(userId, productId,
+    Backend.addUserCartItem(userId, productId, quantity,
+        response => {
+            console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+            console.log(response.data)
+            dispatch({
+                type: USER_UPDATE_CARTITEM,
+                payload:  response.data
+            });
+        },
+        error => {
+            console.log("addUserCartItem error")
+            console.log(error)
+        }); 
+}
+// TODO: Set Active is True
+export const actUserDeleteCartItem = (itemId) => (dispatch) => {
+    console.log("  actUserDeleteCartItem:itemId:" + itemId)
+        Backend.deleteUserCartItem(itemId,
             response => {
                 console.log("deleteUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
                 console.log(response.data)
                 dispatch({
-                    type: USER_UPDATE_CARTITEM,
+                    type: 'USER_DELETE_CARTITEM',
                     payload:  response.data
                 });
             },
             error => {
                 console.log("deleteUserCartItem error")
             }); 
-    }
 }
 
 export const actUserGetCartItems = (userId) => (dispatch) => {
@@ -178,6 +180,22 @@ export const actUserGetCartItems = (userId) => (dispatch) => {
         error => {
             console.log("actUserGetCartItems error")
         }); 
+}
+
+
+export const actUserGetProductsInCart = (productIds) => (dispatch) => {
+    Backend.getSomeProducts(productIds,
+    response => {
+        console.log("Get Some Product of Cart Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+        console.log(response.data)
+        dispatch({
+            type: 'USER_GET_CARTPRODUCT_OK',
+            payload:  response.data
+        });
+    },
+    error => {
+        console.log("Get All Product error")
+    }); 
 }
 
 
@@ -418,10 +436,67 @@ export default function(state = initialState, action) {
             favorites: action.payload
         }
     case USER_GET_CARTITEMS:
-    case USER_UPDATE_CARTITEM:
         return {
             ...state,
             cartItems: action.payload
+        }
+    case USER_UPDATE_CARTITEM:
+        // Add Single Element to cartItems, if Same, update quantity only
+        let oldCartItems = [...state.cartItems];
+        let isFoundItem = false;
+        oldCartItems.forEach((element, idx) => {
+            if (element.id == action.payload.id) {
+                // found one, replace
+                oldCartItems[idx] = action.payload;
+                isFoundItem = true;
+            }
+        })
+        if (!isFoundItem) {
+            // Add to items
+            oldCartItems.push(action.payload)
+        }
+        return {
+            ...state,
+            cartItems: oldCartItems
+        }
+    case 'USER_DELETE_CARTITEM':
+        // Remove Single Element from cartItems
+        let cartItemsDel = [...state.cartItems];
+        for (let idx = 0; idx < cartItemsDel.length; idx++) {
+            if (cartItemsDel[idx].id == action.payload.id) {
+                // found one, replace
+                cartItemsDel.splice(idx, 1)
+                break;
+            }
+        }
+        return {
+            ...state,
+            cartItems: cartItemsDel
+        }
+
+    case 'USER_GET_CARTPRODUCT_OK':
+        // add a new Field 'Product' in each cartItems
+        let cartItems = [...state.cartItems];
+        let products = action.payload;
+        if (products && products.length) {
+            products.forEach((p, idx) => {
+                for (let i = 0; i < cartItems.length; i++) {
+                    console.log("p.id:" + p.id + ",cid:" + cartItems[i].id)
+                    if (p.id == cartItems[i].ProductID) {
+                        // found one, replace
+                        cartItems[i].Product = p;
+                        break;
+                    }
+                }
+            });
+            return {
+                ...state,
+                cartItems: cartItems
+            }
+        } else {
+            return {
+                ...state,
+            }
         }
     case USER_GET_ORDERS:
         return {

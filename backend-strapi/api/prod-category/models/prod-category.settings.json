@@ -37,6 +37,10 @@
     "prod_discounts": {
       "via": "prod_category",
       "collection": "prod-discount"
+    },
+    "discounts": {
+      "via": "ApplyCategory",
+      "collection": "discounts"
     }
   }
 }

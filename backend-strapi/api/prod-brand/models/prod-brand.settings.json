@@ -38,6 +38,10 @@
     "prod_discounts": {
       "via": "prod_brand",
       "collection": "prod-discount"
+    },
+    "discounts": {
+      "via": "ApplyBrand",
+      "collection": "discounts"
     }
   }
 }

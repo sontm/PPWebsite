@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import AppHeader from './AppHeader';
 import { Layout, Row, Col, BackTop } from 'antd';
 
-import {actClientCategoryGet} from '../redux/SiteInfoReducer';
+import {actClientCategoryGet, actClientBrandGet} from '../redux/SiteInfoReducer';
 import {actUserGetProfile} from '../redux/UserReducer';
 
 const { Content, Header, Sider, Footer } = Layout;
@@ -19,6 +19,7 @@ class MyLayout extends Component {
   componentDidMount () {
     console.log("---->Layout DidMount!")
     this.props.actClientCategoryGet();
+    this.props.actClientBrandGet();
 
     this.props.actUserGetProfile();
   }
@@ -50,6 +51,7 @@ const mapStateToProps = (state) => (state);
 const mapDispatchToProps = (dispatch) => {
     return {
       actClientCategoryGet: bindActionCreators(actClientCategoryGet, dispatch),
+      actClientBrandGet: bindActionCreators(actClientBrandGet, dispatch),
       actUserGetProfile: bindActionCreators(actUserGetProfile, dispatch),
     }
 }

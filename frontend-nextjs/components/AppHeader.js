@@ -236,7 +236,7 @@ class AppHeader extends React.Component {
                     <UserOutlined  style={{fontSize:"1.2em", color:"white"}} className={styles['show-only-in-md']}/>
                     <span className={styles['hidden-in-md']} style={{color: "white"}}>
                       {this.props.user.userProfile ? 
-                        (this.props.user.userProfile.firstName + this.props.user.userProfile.lastName) 
+                        (this.props.user.userProfile.username) 
                         : "Tài Khoản"}
                     </span>
                   </Button>

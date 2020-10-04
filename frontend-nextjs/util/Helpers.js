@@ -621,81 +621,97 @@ class Helpers {
 
     // Input data is:
     // [
-    // [{
-    //     "id":2,"name":"Bánh xốp Fullo Vani Sữa (Fullo Stick Wafer Vanilla Milk) Trang","descShort":"Bánh xốp Fullo Vani Sữa (Fullo Stick Wafer Vanilla Milk) desc Short","descMedium":"Bánh xốp Fullo Vani Sữa (Fullo Stick Wafer Vanilla Milk)","descLong":"Bánh xốp Fullo Vani Sữa (Fullo Stick Wafer Vanilla Milk)","unitPrice":10000,"stockNum":1000,"active":true,"imgThump":"images/products/BanhKeo/p2_1.jpg","img1":"images/products/BanhKeo/p2_1.jpg","img2":null,"img3":null,"img4":null,"img5":null,"img6":null,"firstCategoryId":11,"secondCategoryId":4,"thirdCategoryId":1,"brandId":3,"parentProductId":null,"productAttributeId":null,"createdAt":"","updatedAt":"",
-    //     "categories":{"id":11,"name":"Bánh Mềm","desc":null,"active":true,"order":null,"parentCategoryId":4,"createdAt":"","updatedAt":"",
-    //         "cateDiscounts":[]},
-    //     "brands":{"id":3,"name":"Orang Tua","imgLogo":null,"countryId":5,"active":true,"createdAt":"","updatedAt":"",
-    //         "countries":{"id":5,"name":"Trung Quốc","code":"cn","createdAt":"","updatedAt":""},
-    //         "brandDiscounts":[]},
-    //     "attributes":[{"id":2,"name":"Trắng","value":null,"attributeGroupId":1,"createdAt":"","updatedAt":"2019-09-07T02:25:51.137Z",
-    //         "attributeGroups":{"id":1,"name":"Màu Sắc","createdAt":"2019-09-07T02:24:00.454Z","updatedAt":""}}],
-    //     "productDiscounts":[]}]
-
-    // One Disocunt: {"id":1,"desc":"Category Banh Mem giam gia 30% trong thang 9","from":"2019-09-01T16:42:06.000Z",
-    //          "to":"2019-09-30T16:42:06.000Z","type":"discount","fixMoney":0,"percent":30,
-    //     "applyCategoryId":11,"applyBrandId":0,"applyProductId":0,"img":"","coupon":null,"createdAt":"","updatedAt":""}
+        // "discounts": [
+        //     {
+        //     "FixMoney": "0",
+        //     "Percent": 40,
+        //     "_id": "5f784f896884d31468bd0376",
+        //     "Name": "OppoA5s-40%",
+        //     "From": "2020-10-01T05:00:00.000Z",
+        //     "To": "2020-12-17T05:00:00.000Z",
+        //     "Desc": "Oppo A5s giam gia 40%",
+        //     "Type": "discount",
+        //     "__v": 0,
+        //     "ApplyProduct": "5f57b1eff958e833c62f8d4c",
+        //     "id": "5f784f896884d31468bd0376"
+        //     }
+        //     ],
     // Output
-    // return {bestDiscount: 23, unit:"%|d", newPrice: 12, hasGift:true, 
-    //      coupon: null|"JP20", bestCoupon:"", couponUnit:"%|K",discounts[]}
+    // return {bestDiscount: 23, unit:"%|d", newPrice: 12, desc, hasGift:true, giftDesc,
+    //      coupon: null|"JP20", bestCoupon:"", couponUnit:"%|K",couponDesc, discounts[]}
 
     //product["combinedDiscount"] = []
-    parseDiscountInformation(product) {
+    parseDiscountInformation(product, allCategories, allBrands) {
         let result = {};
         let discounts = [];
-        if (product && product.categories && product.categories.cateDiscounts.length > 0) {
-            discounts = [...discounts, ...product.categories.cateDiscounts]
+        let thisCategoryId = product.prod_category.id;
+        let thisBrandId = product.prod_brand.id;
+        console.log("************* thisCategoryId:" + thisCategoryId)
+        console.log("************* thisBrandId:" + thisBrandId)
+        // Find the Category of this Product
+        for (let i = 0; i < allCategories.length; i++) {
+            if (thisCategoryId == allCategories[i].id) {
+                discounts = [...discounts, ...allCategories[i].discounts]
+            }
         }
-        if (product && product.brands && product.brands.brandDiscounts && product.brands.brandDiscounts.length > 0) {
-            discounts = [...discounts, ...product.brands.brandDiscounts]
+        for (let i = 0; i < allBrands.length; i++) {
+            if (thisBrandId == allBrands[i].id) {
+                discounts = [...discounts, ...allBrands[i].discounts]
+            }
         }
-        if (product && product.productDiscounts && product.productDiscounts.length > 0) {
-            discounts = [...discounts, ...product.productDiscounts]
+        if (product && product.discounts && product.discounts.length > 0) {
+            discounts = [...discounts, ...product.discounts]
         }
+
         product["combinedDiscounts"] = discounts;
+        console.log("************* combined discount:" + product.Name)
+        console.log(discounts)
         let bestDiscountMoney = 0;
         let curUnit = "";
-        let newPrice = product.unitPrice;
+        let newPrice = product.UnitPrice;
         let bestDiscountPercentOrFix = 0;
 
         let bestCoPercentOrFix = 0;
         let bestCoMoney = 0;
         let curCouponUnit = "";
         discounts.forEach(element => {
-            if (element.type == DISCOUNT_TYPE_DISCOUNT) {
-                let curDiscountPercent = Math.floor((element.percent/100) * product.unitPrice);
-                let curDiscountFix = element.fixMoney;
+            if (element.Type == DISCOUNT_TYPE_DISCOUNT) {
+                let curDiscountPercent = Math.floor((element.Percent/100) * product.UnitPrice);
+                let curDiscountFix = element.FixMoney;
                 let maxDiscount = Math.max(curDiscountPercent, curDiscountFix);
                 
                 if (bestDiscountMoney < maxDiscount) {
                     bestDiscountMoney = maxDiscount;
                     if (curDiscountPercent >= curDiscountFix) {
                         curUnit = "%";
-                        newPrice = product.unitPrice - curDiscountPercent;
-                        bestDiscountPercentOrFix = element.percent;
+                        newPrice = product.UnitPrice - curDiscountPercent;
+                        bestDiscountPercentOrFix = element.Percent;
                     } else {
-                        newPrice = product.unitPrice - curDiscountFix;
+                        newPrice = product.UnitPrice - curDiscountFix;
                         curUnit = "đ";
-                        bestDiscountPercentOrFix = element.fixMoney;
+                        bestDiscountPercentOrFix = element.FixMoney;
                     }
+                    result.desc = element.Desc;
                 }
-            } else if (element.type == DISCOUNT_TYPE_GIFT) {
+            } else if (element.Type == DISCOUNT_TYPE_GIFT) {
                 result.hasGift = true;
-            } else if (element.type == DISCOUNT_TYPE_COUPON) {
-                result.coupon = element.coupon;
+                result.giftDesc = element.Desc;
+            } else if (element.Type == DISCOUNT_TYPE_COUPON) {
+                result.coupon = element.Name;
 
-                let curCoPercent = Math.floor((element.percent/100) * product.unitPrice);
-                let curCoFix = element.fixMoney;
+                let curCoPercent = Math.floor((element.Percent/100) * product.UnitPrice);
+                let curCoFix = element.FixMoney;
                 let maxCo = Math.max(curCoPercent, curCoFix);
                 
                 if (bestCoMoney < maxCo) {
                     bestCoMoney = maxCo;
+                    result.couponDesc = element.Desc;
                     if (curCoPercent >= curCoFix) {
                         curCouponUnit = "%";
-                        bestCoPercentOrFix = element.percent;
+                        bestCoPercentOrFix = element.Percent;
                     } else {
                         curCouponUnit = "K";
-                        bestCoPercentOrFix = element.fixMoney;
+                        bestCoPercentOrFix = element.FixMoney;
                     }
                 }
             }

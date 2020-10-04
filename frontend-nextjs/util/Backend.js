@@ -11,9 +11,9 @@ class Backend {
         };
         return headers;
     }
-    createHeader() {
+    createHeader(noUseAuth) {
         //if(Cookies.get('XSRF-TOKEN')) {
-        if (localStorage.getItem(LOCAL_CSRF_TOKEN)) {
+        if (localStorage.getItem(LOCAL_CSRF_TOKEN) && !noUseAuth) {
             var headers = {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': '*',
@@ -44,19 +44,26 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+    getAllBrands(onOK, onError) {
+        console.log("getAllBrands")
+        axios.get(AppConstants.API_CMS_URL + "/prod-brands",
+            { headers: this.createHeaderNoAuth()})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
 
     // -------------------------------USER---------------------------------------
     login({username, password}, onOK, onError) {
-        axios.post(AppConstants.API_AUTH_URL + "/auth/login",
-            JSON.stringify({'email': username, 'password': password}),
+        axios.post(AppConstants.API_AUTH_URL + "/auth/local",
+            JSON.stringify({'identifier': username, 'password': password}),
            // { headers: this.createHeader(), withCredentials: true})
-            { headers: this.createHeader()})
+            { headers: this.createHeader(true)}) // noUseAuth = true
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
 
     getUserProfile(onOK, onError) {
-        axios.get(AppConstants.API_USER_URL + "/profile",
+        axios.get(AppConstants.API_USER_URL + "/users/me",
             { headers: this.createHeader()})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
@@ -64,17 +71,24 @@ class Backend {
     
     //product {id, name, quantity, oldPrice, newPrice, discountPercent}
     addUserCartItem(userId, productId, quantity, onOK, onError) {
-        axios.post(AppConstants.API_ORDER_URL + "/order/cart",
-            JSON.stringify({'userId': userId, 'productId': productId, 'quantity': quantity}),
+        axios.post(AppConstants.API_ORDER_URL + "/order-carts",
+            JSON.stringify({'UserID': userId, 'ProductID': productId, 'Quantity': quantity}),
            // { headers: this.createHeader(), withCredentials: true})
-            { headers: this.createHeaderNoAuth(),})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    deleteUserCartItem(itemID, onOK, onError) {
+        axios.delete(AppConstants.API_ORDER_URL + "/order-carts/" + itemID,
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
 
     getUserCartItems(userId, onOK, onError) {
-        axios.get(AppConstants.API_ORDER_URL + "/order/cart/" + userId,
-            { headers: this.createHeaderNoAuth(),})
+        axios.get(AppConstants.API_ORDER_URL + "/order-carts?UserID=" + userId,
+            { headers: this.createHeader(),})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }

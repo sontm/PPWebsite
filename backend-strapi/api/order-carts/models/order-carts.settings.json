@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_carts",
+  "info": {
+    "name": "OrderCarts"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "UserID": {
+      "type": "string",
+      "required": true
+    },
+    "ProductID": {
+      "type": "string",
+      "required": true
+    },
+    "Active": {
+      "type": "boolean",
+      "default": true
+    },
+    "Quantity": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
