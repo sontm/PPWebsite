@@ -24,6 +24,10 @@
     "prod_product_and_attributes": {
       "via": "prod_attribute",
       "collection": "prod-product-and-attribute"
+    },
+    "products": {
+      "via": "prod_attributes",
+      "collection": "prod-product"
     }
   }
 }

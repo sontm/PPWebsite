@@ -4,6 +4,8 @@ import styles from './product.module.css';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Link from 'next/link'
+//import { useRouter } from 'next/router'
+import { withRouter } from "next/router";
 
 import ReactImageMagnify from 'react-image-magnify';
 import ImageGallery from 'react-image-gallery';
@@ -96,6 +98,7 @@ class Product extends Component {
         // this.onAddToFav = this.onAddToFav.bind(this);
         this.onClickProductDetail = this.onClickProductDetail.bind(this);
         this.onCloseModelImages = this.onCloseModelImages.bind(this);
+        this.onClickAttributeNewPrice = this.onClickAttributeNewPrice.bind(this);
         
         this.onClickThumbnail = this.onClickThumbnail.bind(this)
         this.state ={
@@ -105,6 +108,7 @@ class Product extends Component {
         }
 
         this.prevProductDetail = null;
+        //this.router = useRouter();
     }
 
     onAddToCart(e) {
@@ -155,6 +159,14 @@ class Product extends Component {
         })
     }
 
+    onClickAttributeNewPrice(pid, spid) {
+        // Only Shallow Routing is Ok https://nextjs.org/docs/routing/shallow-routing
+        console.log("onClickAttributeNewPrice:" + pid+",spid:"+ spid);
+        this.props.router.replace({ pathname: '/products/[id]', query: { spid: spid }}, 
+            `/products/${pid}`, {shallow: true})
+        
+    }
+
     componentDidMount() {
         console.log("ProductDetail did mount----------")
         // When have just Receive Product Detail4
@@ -194,10 +206,21 @@ class Product extends Component {
      // return {bestDiscount: 23, unit:"%|d", newPrice: 12, desc, hasGift:true, giftDesc,
     //      coupon: null|"JP20", bestCoupon:"", couponUnit:"%|K",couponDesc, discounts[]}
     render () {
+        console.log("Query--------")
+        console.log(this.props.router.query);
         let data = this.props.data;
-        //let discountInfo= {newPrice: data.UnitPrice};
-        let discountInfo = Helpers.parseDiscountInformation(data, 
+        let subdata = data;
+        if (this.props.router.query.spid) {
+            for (let i = 0; i < data.prod_childs.length; i++) {
+                if (data.prod_childs[i].id == this.props.router.query.spid) {
+                    subdata = data.prod_childs[i];
+                    break;
+                }
+            }
+        }
+        let discountInfo = Helpers.parseDiscountInformation(subdata, 
             this.props.categories, this.props.brands);
+        
 
         console.log("Product--------")
         let images = parseImagesFromProduct(data);
@@ -210,11 +233,60 @@ class Product extends Component {
                 currentIndexImgCarousel = idx;
             }
         })
+        let summarizeAttributes = {}; // {Color: [White, Grey]}
+        let summarizeAttributesArr = [];
+        if (data.prod_attributes) {
+            data.prod_attributes.forEach(element => {
+                element.spid = data.id;
+                element.fullspid = data.id;
+                if (summarizeAttributes[element.Name]) {
+                    // when exist
+                    summarizeAttributes[element.Name].push(element);
+                } else {
+                    summarizeAttributes[element.Name] = [element];
+                }
+            })
+        }
+        if (data.prod_childs) {
+            data.prod_childs.forEach(c => {
+                c.prod_attributes.forEach(element => {
+                    element.spid = c.id;
+                    element.fullspid = c.id; // id1-id2
+                    if (summarizeAttributes[element.Name]) {
+                        // when exist
+                        let isExistAtt = false;
+                        for (let i = 0; i < summarizeAttributes[element.Name].length; i++) {
+                            if (summarizeAttributes[element.Name][i].Value == element.Value) {
+                                isExistAtt = true;
+                                // Append spid to this ID
+                                summarizeAttributes[element.Name][i].fullspid += "-"+c.id;
+                                break;
+                            }
+                        }
+                        if (!isExistAtt) {
+                            summarizeAttributes[element.Name].push(element);
+                        }
+                        
+                    } else {
+                        summarizeAttributes[element.Name] = [element];
+                    }
+                })
+            })
+        }
+        console.log("Total Attributes++++++++++++++++++++++++++")
+        console.log(summarizeAttributes)
+        for (let prop in summarizeAttributes) {
+            // Because these two Obj share same prop, so set in 1 for loop
+            if (Object.prototype.hasOwnProperty.call(summarizeAttributes, prop)) {
+                    summarizeAttributesArr.push(summarizeAttributes[prop]);
+            }
+        }
+        console.log(summarizeAttributesArr)
         return (
             <MyLayout>
                 
             <Head>
-                <title>{data.Name}</title>
+                <title>{subdata.Name ? subdata.Name : data.Name}</title>
             </Head>
             
             {/* <div dangerouslySetInnerHTML={{ __html: data.LongDescription }} /> */}
@@ -275,7 +347,7 @@ class Product extends Component {
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={12} xl={10} xxl={10} style={{padding: "10px"}}>
                         <div className={styles['product-title']}>
-                            {data.Name}
+                            {subdata.Name ? subdata.Name : data.Name}
                         </div>
                         <div className={styles['product-price-intro']}>
                             <span>Thương Hiệu:&nbsp;</span>
@@ -296,7 +368,7 @@ class Product extends Component {
                         </div>
                         <div className={styles['product-price-old']}>
                             <span>Gia Goc:&nbsp;</span>
-                            {data.UnitPrice + "đ"}
+                            {subdata.UnitPrice + "đ"}
                         </div>
 
                         <div className={styles['product-price']}>
@@ -311,12 +383,27 @@ class Product extends Component {
                         <hr />
                         
                         <div className={styles['product-desc-medium']}>
-                            <div dangerouslySetInnerHTML={{ __html: data.ShortDescription }} />
+                            <div dangerouslySetInnerHTML={{ 
+                                __html: subdata.ShortDescription ? subdata.ShortDescription : data.ShortDescription }} />
                         </div>
 
                         <hr />
                         {/* {this.renderDiscountInfos(discountInfo.discounts)} */}
-
+                        {
+                            summarizeAttributesArr.map(element => (
+                                <Row style={{textAlign: "center"}}>
+                                    <span>{element[0].Name+": "}</span>
+                                    {element.map((attr, idx) => (
+                                        <Button size={"small"} type={attr.fullspid.indexOf(subdata.id) >= 0 ? "primary": ""} 
+                                        onClick={() => this.onClickAttributeNewPrice(data.id, attr.spid)}>
+                                            {attr.Value}
+                                        </Button>
+                                    ))}
+                                    
+                                </Row>
+                            ))
+                        }
+                        
                         <Row style={{textAlign: "center"}}>
                             <span>Số Lượng (Hộp):&nbsp;&nbsp;</span>
                             <Input style={{width: "120px", textAlign:"center"}}
@@ -348,9 +435,8 @@ class Product extends Component {
                 </Row>
 
                 <Row style={{backgroundColor: "white"}}>
-                    <div className={styles['product-desc-medium']}>
-                        <div dangerouslySetInnerHTML={{ __html: data.LongDescription }} />
-                    </div>
+                    <div className={styles['product-desc-medium']} dangerouslySetInnerHTML={{ 
+                        __html: subdata.LongDescription?subdata.LongDescription:data.LongDescription }} />
                 </Row>
             </MyLayout>
         )
@@ -364,18 +450,21 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
   
-export default connect(mapStateToProps, mapDispatchToProps)(Product)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Product));
 
 export async function getStaticPaths() {
     // Return a list of possible value for id
     const res = await axios.get(AppConstants.API_CMS_URL+"/prod-products")
     const arrNews = await res.data
+    // Only add Product which is Parents: has some childs, no Parent
     const paths = arrNews.map(n => {
-        return {
-        params: {
-            id: n._id
-        }
-        }
+        //if (!n.prod_parent) {
+            return {
+                params: {
+                    id: n._id
+                }
+            }
+        //}
     })
     return {
         paths,

@@ -44,28 +44,26 @@
       "model": "prod-brand",
       "via": "prod_products"
     },
-    "prod_product": {
+    "prod_parent": {
       "model": "prod-product",
-      "via": "prod_products"
+      "via": "prod_childs"
     },
-    "prod_products": {
+    "prod_childs": {
       "collection": "prod-product",
-      "via": "prod_product"
+      "via": "prod_parent",
+      "autoPopulate": true
     },
-    "prod_product_and_attributes": {
-      "collection": "prod-product-and-attribute",
-      "via": "prod_product"
-    },
-    "prod_discounts": {
-      "collection": "prod-discount",
-      "via": "prod_product"
+    "prod_attributes": {
+      "collection": "prod-attribute",
+      "via": "products",
+      "dominant": true
     },
     "ShortDescription": {
       "type": "richtext"
     },
     "discounts": {
-      "via": "ApplyProduct",
-      "collection": "discounts"
+      "collection": "discounts",
+      "via": "ApplyProduct"
     }
   }
 }

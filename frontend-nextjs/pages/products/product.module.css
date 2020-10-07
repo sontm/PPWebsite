@@ -35,29 +35,30 @@
     text-align: left;
     color: red;
 }
-.product-detail .product-price-intro {
+.product-price-intro {
     font-size: 1em;
     text-align: left;
     color: gray;
 }
 
-.product-detail .product-price-old {
+.product-price-old {
     margin-right: 10px;
     font-size: 1em;
     text-align: left;
     color: gray;
 }
-.product-detail .product-price-discount {
+.product-price-discount {
     margin-right: 10px;
     font-size: 1em;
     text-align: left;
     color:red;
 }
 
-.product-detail .product-desc-medium {
+.product-desc-medium {
     text-align: left;
     font-size: 1em;
     list-style: circle;
+    padding: 17px;
 }
 
 .product-detail .btn-addtocart {

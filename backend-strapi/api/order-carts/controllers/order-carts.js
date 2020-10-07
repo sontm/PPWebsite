@@ -36,5 +36,5 @@ module.exports = {
             entity = await strapi.services['order-carts'].create(ctx.request.body);
         }
         return sanitizeEntity(entity, { model: strapi.models['order-carts'] });
-        },
-  };
+    },
+};

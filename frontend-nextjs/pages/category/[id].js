@@ -82,8 +82,9 @@ export async function getStaticProps({ params }) {
     const productDatas = await resProds.data
 
     let data = [];
+    // Only add Product which is Parents: has some childs, no Parent
     productDatas.forEach(element => {
-        if (element.prod_category.id == params.id) {
+        if (element.prod_category.id == params.id && !element.prod_parent) {
             data.push(element)
         }
     });

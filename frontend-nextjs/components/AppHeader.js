@@ -176,6 +176,14 @@ class AppHeader extends React.Component {
       );
     }
   }
+  getTotalCartItems(cartItems) {
+    console.log(cartItems)
+    let totalItems = 0;
+    cartItems.forEach(element => {
+      totalItems += element.Quantity;
+    });
+    return totalItems;
+  }
 
 
   render() {
@@ -250,7 +258,7 @@ class AppHeader extends React.Component {
                   <Button  ghost size="large">
                     <ShoppingCartOutlined style={{fontSize:"1.2em", color:"white"}} className={styles['show-only-in-md']}/>
                     <span className={styles['hidden-in-md']}>Giỏ Hàng</span>
-                    <Badge showZero count={this.props.user.cartItems ? this.props.user.cartItems.length : 0} 
+                    <Badge showZero count={this.props.user.cartItems ? this.getTotalCartItems(this.props.user.cartItems) : 0} 
                       className={styles['cart-badge']}/>
                   </Button>
                   </Link>
