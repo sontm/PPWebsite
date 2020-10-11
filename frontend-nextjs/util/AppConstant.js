@@ -31,7 +31,6 @@ export const DISCOUNT_TYPE_DISCOUNT = "discount";
 export const DISCOUNT_TYPE_COUPON = "coupon";
 export const DISCOUNT_TYPE_GIFT = "gift";
 
-
 export default class AppConstants  {
     static get API_AUTH_URL() {
         //return "http://localhost";

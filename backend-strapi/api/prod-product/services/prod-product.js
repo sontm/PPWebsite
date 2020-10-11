@@ -14,7 +14,7 @@ module.exports = {
   
      // Need Populate Full prod attributes of childs
     findOne(params, populate) {
-        return strapi.query('prod-product').findOne(params, ['prod_attributes','discounts',
+        return strapi.query('prod-product').findOne(params, ['prod_attributes','discounts','prod_brand','prod_category',
             {
                 path: 'prod_childs',
                 populate: {
