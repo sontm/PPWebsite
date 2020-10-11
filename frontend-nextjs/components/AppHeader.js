@@ -177,7 +177,6 @@ class AppHeader extends React.Component {
     }
   }
   getTotalCartItems(cartItems) {
-    console.log(cartItems)
     let totalItems = 0;
     cartItems.forEach(element => {
       totalItems += element.Quantity;

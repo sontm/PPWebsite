@@ -35,11 +35,15 @@ class ProductWrapper extends React.Component {
     // return {bestDiscount: 23, unit:"%|d", newPrice: 12, hasGift:true, 
     //      coupon: null|"JP20", bestCoupon:"", couponUnit:"%|K",discounts[]}
     render() {
-        console.log("========Wrapper++++++++++")
         let product = this.props.singleProduct;
         //let discountInfo = {hasGift:80, coupon:"XXX"};
         let discountInfo = helpers.parseDiscountInformation(product, 
             this.props.categories, this.props.brands);
+
+        let productImages = product.Images;
+        if (!productImages || !productImages.length) {
+            productImages = product.prod_parent.Images;
+        }
         return (
             <Card className={styles['product-wrapper']}>
                 {discountInfo.hasGift ? (
@@ -55,7 +59,7 @@ class ProductWrapper extends React.Component {
                 
                 <Link href="/products/[id]" as={`/products/${product.id}`}>
                 <a><div className={styles['image-thump']}>
-                    <img src={(product.Images && product.Images.length > 0) ? product.Images[0].formats.thumbnail.url : ""}/>
+                    <img src={(productImages.length > 0) ? productImages[0].formats.thumbnail.url : ""}/>
                 </div></a>
                 </Link>
                 <div className={styles['product-title']}>

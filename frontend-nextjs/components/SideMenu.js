@@ -18,7 +18,7 @@ class SideMenu extends Component {
     renderSelectCategory() {
         //<Link href="/category/[id]" as={`/category/${topMenu.id}`}>
         // Type 1 of Category (Query Whole Category)
-        if (this.props.categoriesLevel) {
+        if (this.props.categoriesLevel && this.props.curCateId) {
             
             const curID = this.props.curCateId;
             const selectedKeys = [];
@@ -174,6 +174,53 @@ class SideMenu extends Component {
                     </Menu>
                 </div>
             );
+        } else {
+            return null;
+        }
+    }
+
+    renderBrand() {
+        let content = [];
+        if (this.props.brands && this.props.brands.length > 0 && this.props.curBrandId) {
+            const selectedKeys = [];
+            selectedKeys.push("" + this.props.curBrandId)
+
+            this.props.brands.forEach(element => {
+                content.push(
+                    <SubMenu
+                        key={element.id}
+                        className={element.id==this.props.curBrandId ? styles['sidemenu-cate-selected'] : ""}
+                        title={
+                            <Link href="/brands/[id]" as={`/brands/${element.id}`}>
+                            {element.Name}
+                            </Link>
+                        } />
+                )   
+            })
+            return (
+                <div>
+                    <div className={styles['ant-card ant-card-small']} style={{borderRight:"1px solid #e8e8e8"}}>
+                    <div className={styles['ant-card-head app-card-head']}>
+                        <div className={styles['ant-card-head-wrapper']}>
+                            <div className={styles['ant-card-head-title']}>
+                            Danh Muc Thuong Hieu
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <Menu
+                        selectedKeys={selectedKeys}
+                        mode="inline"
+                        inlineIndent={20}
+                        onClick={this.onSideMenuItemClick}
+                        style={{borderTop:"1px solid #e8e8e8", paddingTop:"0px"}}
+                    >
+                        {content}
+                    </Menu>
+                </div>
+            )
+        } else {
+            return null;
         }
     }
 
@@ -185,6 +232,7 @@ class SideMenu extends Component {
         return (
             <div>
                 {this.renderSelectCategory()}
+                {this.renderBrand()}
             </div>
         )
     }

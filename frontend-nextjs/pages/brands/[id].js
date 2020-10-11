@@ -1,5 +1,5 @@
 import MyLayout from '../../components/layout';
-import styles from './category.module.css';
+import styles from './brand.module.css';
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
@@ -20,7 +20,7 @@ const queryString = require('query-string');
 const { Search } = Input;
 const { Option } = Select;
 
-export default function Category({ data, categories, curCateId, categoriesLevel, brands }) {
+export default function Brands({ data, categories, curCateId, curBrandId, brands }) {
     let producView = [];
     if (data.length > 0) {
         data.forEach(element => {
@@ -40,8 +40,7 @@ export default function Category({ data, categories, curCateId, categoriesLevel,
           <Row>
             <Col xs={0} sm={0} md={6} lg={5} xl={4} xxl={4}>
             <div className={styles['categorylist-sidemenu']}>
-                <SideMenu categories={categories} curCateId={curCateId} 
-                    categoriesLevel={categoriesLevel} data={data}/>
+                <SideMenu curBrandId={curBrandId} brands={brands}/>
             </div>
             </Col>
             <Col xs={24} sm={24} md={18} lg={19} xl={20} xxl={20}>
@@ -56,7 +55,7 @@ export default function Category({ data, categories, curCateId, categoriesLevel,
 
 export async function getStaticPaths() {
     // Return a list of possible value for id
-    const res = await axios.get(AppConstants.API_CMS_URL+"/prod-categories")
+    const res = await axios.get(AppConstants.API_CMS_URL+"/prod-brands")
     const arrNews = await res.data
     const paths = arrNews.map(n => {
         return {
@@ -73,7 +72,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
     // Fetch necessary data for the blog post using params.id
-    console.log("--->Category: getStaticProps")
+    console.log("--->Brands: getStaticProps")
     console.log(params)
     // const res = await axios.get(AppConstants.API_CMS_URL+"/prod-categories/"+ params.id)
     // const cateData = await res.data
@@ -84,7 +83,7 @@ export async function getStaticProps({ params }) {
     let data = [];
     // Only add Product which is Parents: has some childs, no Parent
     productDatas.forEach(element => {
-        if (element.prod_category.id == params.id && !element.prod_parent) {
+        if (element.prod_brand.id == params.id && !element.prod_parent) {
             data.push(element)
         }
     });
@@ -101,8 +100,7 @@ export async function getStaticProps({ params }) {
         props: {
             data,
             categories,
-            categoriesLevel,
-            curCateId: params.id,
+            curBrandId: params.id,
             brands
         }
     }

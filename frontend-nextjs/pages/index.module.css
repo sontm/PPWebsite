@@ -33,6 +33,12 @@
     overflow: hidden !important;
 } */
 
+
+.scroll-menu-arrow {
+    padding: -100px;
+    cursor: pointer;
+}
+
 .carousel.carousel-slider {
     /* text-align: center !important; */
     height: 400px !important;
@@ -42,6 +48,14 @@
 }
 .empty-space-20px {
     height: 20px;
+    width: 100%;
+}
+.empty-space-30px {
+    height: 30px;
+    width: 100%;
+}
+.empty-space-40px {
+    height: 40px;
     width: 100%;
 }
 .my-img-carousel {

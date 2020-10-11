@@ -669,6 +669,7 @@ class Helpers {
         let bestDiscountMoney = 0;
         let curUnit = "";
         let newPrice = product.UnitPrice;
+        let discountPrice = 0;
         let bestDiscountPercentOrFix = 0;
 
         let bestCoPercentOrFix = 0;
@@ -685,12 +686,15 @@ class Helpers {
                     if (curDiscountPercent >= curDiscountFix) {
                         curUnit = "%";
                         newPrice = product.UnitPrice - curDiscountPercent;
+                        discountPrice = curDiscountPercent;
                         bestDiscountPercentOrFix = element.Percent;
                     } else {
                         newPrice = product.UnitPrice - curDiscountFix;
                         curUnit = "đ";
+                        discountPrice = curDiscountFix;
                         bestDiscountPercentOrFix = element.FixMoney;
                     }
+                    
                     result.desc = element.Desc;
                 }
             } else if (element.Type == DISCOUNT_TYPE_GIFT) {
@@ -705,6 +709,7 @@ class Helpers {
                 
                 if (bestCoMoney < maxCo) {
                     bestCoMoney = maxCo;
+                    discountPrice = bestCoMoney;
                     result.couponDesc = element.Desc;
                     if (curCoPercent >= curCoFix) {
                         curCouponUnit = "%";
@@ -719,6 +724,7 @@ class Helpers {
         result.bestDiscount = bestDiscountPercentOrFix;
         result.unit = curUnit;
         result.newPrice = newPrice;
+        result.discountPrice = discountPrice; // the amount of money discounted
         result.discounts = discounts;
         result.bestCoupon = bestCoPercentOrFix;
         result.couponUnit = curCouponUnit;

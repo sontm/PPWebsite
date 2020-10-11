@@ -49,9 +49,9 @@
       "via": "prod_childs"
     },
     "prod_childs": {
+      "autoPopulate": true,
       "collection": "prod-product",
-      "via": "prod_parent",
-      "autoPopulate": true
+      "via": "prod_parent"
     },
     "prod_attributes": {
       "collection": "prod-attribute",
@@ -64,6 +64,10 @@
     "discounts": {
       "collection": "discounts",
       "via": "ApplyProduct"
+    },
+    "IsPromote": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

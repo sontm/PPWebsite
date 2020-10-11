@@ -7,11 +7,16 @@ import dynamic from 'next/dynamic'
 
 import { Button, Radio } from 'antd';
 import { Row, Col, Card} from 'antd';
+import ScrollMenu from 'react-horizontal-scrolling-menu';
 
-import { DownloadOutlined } from '@ant-design/icons';
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 import styles from './index.module.css';
+import ProductWrapper from '../components/ProductWrapper';
+import AppConstants from '../util/AppConstant';
+import Helpers from '../util/Helpers'
 
 var Carousel = require('react-responsive-carousel').Carousel;
+const { Meta } = Card;
 
 //.carousel .control-arrow,.carousel.carousel-slider .control-arrow{-webkit-transition:all .25s ease-in;-moz-transition:all .25s ease-in;-ms-transition:all .25s ease-in;-o-transition:all .25s ease-in;transition:all .25s ease-in;opacity:.4;filter:alpha(opacity=40);position:absolute;z-index:2;top:20px;background:none;border:0;font-size:32px;cursor:pointer}.carousel .control-arrow:hover{opacity:1;filter:alpha(opacity=100)}.carousel .control-arrow:before,.carousel.carousel-slider .control-arrow:before{margin:0 5px;display:inline-block;border-top:8px solid transparent;border-bottom:8px solid transparent;content:''}.carousel .control-disabled.control-arrow{opacity:0;filter:alpha(opacity=0);cursor:inherit;display:none}.carousel .control-prev.control-arrow{left:0}.carousel .control-prev.control-arrow:before{border-right:8px solid #fff}.carousel .control-next.control-arrow{right:0}.carousel .control-next.control-arrow:before{border-left:8px solid #fff}.carousel-root{outline:none}.carousel{position:relative;width:100%}.carousel *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.carousel img{width:100%;display:inline-block;pointer-events:none}.carousel .carousel{position:relative}.carousel .control-arrow{outline:0;border:0;background:none;top:50%;margin-top:-13px;font-size:18px}.carousel .thumbs-wrapper{margin:20px;overflow:hidden}.carousel .thumbs{-webkit-transition:all .15s ease-in;-moz-transition:all .15s ease-in;-ms-transition:all .15s ease-in;-o-transition:all .15s ease-in;transition:all .15s ease-in;-webkit-transform:translate3d(0, 0, 0);-moz-transform:translate3d(0, 0, 0);-ms-transform:translate3d(0, 0, 0);-o-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0);position:relative;list-style:none;white-space:nowrap}.carousel .thumb{-webkit-transition:border .15s ease-in;-moz-transition:border .15s ease-in;-ms-transition:border .15s ease-in;-o-transition:border .15s ease-in;transition:border .15s ease-in;display:inline-block;margin-right:6px;white-space:nowrap;overflow:hidden;border:3px solid #fff;padding:2px}.carousel .thumb:focus{border:3px solid #ccc;outline:none}.carousel .thumb.selected,.carousel .thumb:hover{border:3px solid #333}.carousel .thumb img{vertical-align:top}.carousel.carousel-slider{position:relative;margin:0;overflow:hidden}.carousel.carousel-slider .control-arrow{top:0;color:#fff;font-size:26px;bottom:0;margin-top:0;padding:5px}.carousel.carousel-slider .control-arrow:hover{background:rgba(0,0,0,0.2)}.carousel .slider-wrapper{overflow:hidden;margin:auto;width:100%;-webkit-transition:height .15s ease-in;-moz-transition:height .15s ease-in;-ms-transition:height .15s ease-in;-o-transition:height .15s ease-in;transition:height .15s ease-in}.carousel .slider-wrapper.axis-horizontal .slider{-ms-box-orient:horizontal;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-moz-flex;display:-webkit-flex;display:flex}.carousel .slider-wrapper.axis-horizontal .slider .slide{flex-direction:column;flex-flow:column}.carousel .slider-wrapper.axis-vertical{-ms-box-orient:horizontal;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-moz-flex;display:-webkit-flex;display:flex}.carousel .slider-wrapper.axis-vertical .slider{-webkit-flex-direction:column;flex-direction:column}.carousel .slider{margin:0;padding:0;position:relative;list-style:none;width:100%}.carousel .slider.animated{-webkit-transition:all .35s ease-in-out;-moz-transition:all .35s ease-in-out;-ms-transition:all .35s ease-in-out;-o-transition:all .35s ease-in-out;transition:all .35s ease-in-out}.carousel .slide{min-width:100%;margin:0;position:relative;text-align:center;background:#000}.carousel .slide img{width:100%;vertical-align:top;border:0}.carousel .slide iframe{display:inline-block;width:calc(100% - 80px);margin:0 40px 40px;border:0}.carousel .slide .legend{-webkit-transition:all .5s ease-in-out;-moz-transition:all .5s ease-in-out;-ms-transition:all .5s ease-in-out;-o-transition:all .5s ease-in-out;transition:all .5s ease-in-out;position:absolute;bottom:40px;left:50%;margin-left:-45%;width:90%;border-radius:10px;background:#000;color:#fff;padding:10px;font-size:12px;text-align:center;opacity:0.25;-webkit-transition:opacity .35s ease-in-out;-moz-transition:opacity .35s ease-in-out;-ms-transition:opacity .35s ease-in-out;-o-transition:opacity .35s ease-in-out;transition:opacity .35s ease-in-out}.carousel .control-dots{position:absolute;bottom:0;margin:10px 0;padding:0;text-align:center;width:100%}@media (min-width: 960px){.carousel .control-dots{bottom:0}}.carousel .control-dots .dot{-webkit-transition:opacity .25s ease-in;-moz-transition:opacity .25s ease-in;-ms-transition:opacity .25s ease-in;-o-transition:opacity .25s ease-in;transition:opacity .25s ease-in;opacity:.3;filter:alpha(opacity=30);box-shadow:1px 1px 2px rgba(0,0,0,0.9);background:#fff;border-radius:50%;width:8px;height:8px;cursor:pointer;display:inline-block;margin:0 8px}.carousel .control-dots .dot.selected,.carousel .control-dots .dot:hover{opacity:1;filter:alpha(opacity=100)}.carousel .carousel-status{position:absolute;top:0;right:0;padding:5px;font-size:10px;text-shadow:1px 1px 1px rgba(0,0,0,0.9);color:#fff}.carousel:hover .slide .legend{opacity:1}
 export default class Home extends React.Component {
@@ -20,6 +25,39 @@ export default class Home extends React.Component {
   }
 
   render() {
+    console.log("this.props.promotes:++++++++++++++++++++++++++" )
+    console.log(this.props) 
+    let pViewPromotes = [];
+    let pViewHotDeals = [];
+    let pViewBrands = [];
+    if (this.props.promotes.length && this.props.categories.length && this.props.brands.length ) {
+      this.props.promotes.forEach(element => {
+        pViewPromotes.push (
+          <Col xs={12} sm={12} md={8} lg={6} xl={6} xxl={4} key={element.id}>
+            <ProductWrapper singleProduct={element} categories={this.props.categories} brands={this.props.brands}/>
+        </Col>)
+      })
+    }
+    if (this.props.hotdeals.length && this.props.categories.length && this.props.brands.length ) {
+      this.props.hotdeals.forEach(element => {
+        pViewHotDeals.push (
+          <ProductWrapper key={element.id} singleProduct={element} categories={this.props.categories} brands={this.props.brands}/>
+        )
+      })
+    }
+    if (this.props.brands.length ) {
+      this.props.brands.forEach(element => {
+        pViewBrands.push (
+          <Link href="/brands/[id]" as={`/brands/${element.id}`}>
+          <Card hoverable style={{ width: 150, margin: "3px" }}
+          cover={<img alt="example" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/863px-Apple_logo_black.svg.png" />}>
+            <Meta title={element.Name} style={{textAlign: "center"}}/>
+          </Card>
+          </Link>
+        )
+      })
+    }
+
     return (
       <MyLayout home>
         <Head>
@@ -55,38 +93,131 @@ export default class Home extends React.Component {
         </div>
 
         <div className={styles['empty-space-20px']} />
+        {/* Server Query */}
         <Card title="Hot Deals" bordered={false}>
-            {/* <HotDiscountHome /> */}
+          <ScrollMenu
+            data={pViewHotDeals}
+            arrowLeft={
+              <div className={styles['scroll-menu-arrow']}>
+                {<LeftCircleOutlined style={{fontSize:"30px", color: "grey"}}/>}
+              </div>}
+            arrowRight={
+              <div className={styles['scroll-menu-arrow']}>
+                {<RightCircleOutlined style={{fontSize:"30px",color: "grey"}}/>}
+              </div>}
+            wheel={false}
+            translate={5}
+            transition={0.3}
+            inertiaScrollingSlowdown={0.25}
+            scrollBy={1}
+            hideSingleArrow={true}
+            hideArrows={true}
+          />
+
+          <div className={styles['empty-space-30px']} />
+          <Link href="/hotdeal">
+            <div style={{width: "100%", "textAlign": "center"}}>
+              <Button  size="large" style={{display: "inline-block"}}>View More</Button>
+            </div>
+          </Link>
         </Card>
 
+
         <div className={styles['empty-space-20px']} />
+        {/* Server Query */}
+        <Card title="Hot Products" bordered={false}>
+          <Row>
+            {pViewPromotes}
+          </Row>
+        </Card>
+        
+        <div className={styles['empty-space-20px']} />
+        {/* Client Query */}
         {/* <FavoriteHome /> */}
 
         <div className={styles['empty-space-20px']} />
+        {/* Client Query */}
         <Card title="San Pham Ban Da Xem" bordered={false}>
             {/* <RecentViewHome /> */}
         </Card>
         </div>
+
+        <div className={styles['empty-space-20px']} />
+        {/* Client Query */}
+        <Card title="Latest News" bordered={false}>
+            {/* <RecentViewHome /> */}
+        </Card>
+
+        <div className={styles['empty-space-20px']} />
+        {/* Server Query */}
+        <Card title="Shop by Brands" bordered={false}>
+          <ScrollMenu
+              data={pViewBrands}
+              arrowLeft={
+                <div className={styles['scroll-menu-arrow']}>
+                  {<LeftCircleOutlined style={{fontSize:"30px", color: "grey"}}/>}
+                </div>}
+              arrowRight={
+                <div className={styles['scroll-menu-arrow']}>
+                  {<RightCircleOutlined style={{fontSize:"30px",color: "grey"}}/>}
+                </div>}
+              wheel={false}
+              translate={5}
+              transition={0.3}
+              inertiaScrollingSlowdown={0.25}
+              scrollBy={1}
+              hideSingleArrow={true}
+              hideArrows={true}
+            />
+        </Card>
 
       </MyLayout>
     )
   }
 }
 
-//getStaticProps and getStaticPaths runs only on the server-side. 
-//It will never be run on the client-side. 
-//It won’t even be included in the JS bundle for the browser. 
-// export async function getStaticProps() {
-//   const allPostsData = getSortedPostsData()
+// getStaticProps and getStaticPaths runs only on the server-side. 
+// It will never be run on the client-side. 
+// It won’t even be included in the JS bundle for the browser. 
+export async function getStaticProps() {
+  const resPromote = await axios.get(AppConstants.API_CMS_URL+"/prod-products?IsPromote=true&IsActive=true")
+  // Get List of Categories
+  const resAllCate = await axios.get(AppConstants.API_CMS_URL+"/prod-categories")
+  const categories = await resAllCate.data;
 
-//   const res = await axios.get(process.env.API_URL+"/prod-products")
-//   const data = await res.data
-//   return {
-//     props: {
-//       data
-//     }
-//   }
-// }
+  const resAllBrand = await axios.get(AppConstants.API_CMS_URL+"/prod-brands")
+  const brands = await resAllBrand.data;
+
+  const resProds = await axios.get(AppConstants.API_CMS_URL+"/prod-products/")
+  let productDatas = await resProds.data
+  let hotdealsAll = [];
+  // Only add Product which is Parents: has some childs, no Parent
+  productDatas.forEach(element => {
+      let discountInfo = Helpers.parseDiscountInformation(element, categories, brands);
+      element.discountPrice = discountInfo.discountPrice;
+      if (element.discountPrice) { 
+        hotdealsAll.push(element);
+      }
+  });
+
+  // Sort Large to Small
+  hotdealsAll.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1 : ((b.discountPrice < a.discountPrice) ? -1 : 0)); 
+  // Limit only 3 Row (12products) in Home Page
+  let hotdeals = [];
+  if (hotdealsAll.length > 12) {
+    hotdeals= hotdealsAll.slice(0, 12);
+  } else {
+    hotdeals = hotdealsAll
+  }
+  return {
+    props: {
+      promotes: resPromote.data,
+      categories,
+      brands,
+      hotdeals
+    }
+  }
+}
 
 // export async function getServerSideProps() {
 //   const res = await axios.get(process.env.API_URL+"/prod-products")
