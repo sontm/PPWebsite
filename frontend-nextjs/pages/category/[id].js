@@ -34,8 +34,8 @@ class Category extends React.Component {
     // filterInfo{
     //     brands:[], // list of brand ID, if empty mean All
     //     brandCountries:[], // list of ID
-    //     attributes:[], // list of ID,
-    //     priceRange:{} // {name: 1, from: m to:}; name is start from 1, just the Range in Query
+    //     attributes:[], list of {Name: "MauSac", ID, Value: "Green"},
+    //     priceRange:{} // {from:, to:}; name is start from 1, just the Range in Query
     // };
     onFilterProduct(filterInfo) {
         console.log("onFIlterProduct###################")
@@ -53,16 +53,35 @@ class Category extends React.Component {
                 if (!filterInfo.brandCountries.length || // if No Selected, means all
                     (filterInfo.brandCountries.length > 0 && filterInfo.brandCountries.indexOf(element.prod_brand.prod_country) >= 0)) {
 
-                    for (let i = 0; i < element.prod_attributes.length; i++) {
-                        let curId = element.prod_attributes[i].id;
-                        // Check another Filter criteria: Attribute
-                        if (!filterInfo.attributes.length || // if No Selected, means all 
-                            (filterInfo.attributes.length > 0 && filterInfo.attributes.indexOf(curId) >= 0)) {
+
+                    // Check Satisfy Price range
+                    if (element.UnitPrice >= filterInfo.priceRange.from && element.UnitPrice <= filterInfo.priceRange.to) {
+                        if (!filterInfo.attributes.length) { // if No Selected, means all 
+                            displayProducts.push(element)
+                        } else {
+                            // Need Satisfy All Selected Filter
+
+                            let foundCount = 0;
+                            let differentFilterName = [];
+                            for (let j = 0; j < filterInfo.attributes.length; j++) {
+                                if (differentFilterName.indexOf(filterInfo.attributes[j].Name) < 0) {
+                                    differentFilterName.push(filterInfo.attributes[j].Name);
+                                }
+                                for (let i = 0; i < element.prod_attributes.length; i++) {
+                                    // Check another Filter criteria: Attribute
+                                    if (filterInfo.attributes[j].Name == element.prod_attributes[i].Name) { // This is same Kind Filter
+                                        if (filterInfo.attributes[j].id == element.prod_attributes[i].id) {
+                                            foundCount++;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (foundCount == differentFilterName.length) {
                                 displayProducts.push(element)
-                                break;
+                            }
                         }
                     }
-
                 }
             }
             

@@ -4,7 +4,7 @@ import { Row, Col, Card } from 'antd';
 import { Checkbox, Slider, InputNumber, Radio, Tooltip } from 'antd';
 import Link from 'next/link'
 import styles from './SideMenu.module.css';
-import AppConstant, {CONFIG_PRICE_DIVIDED_RANGE, CONFIG_PRICE_ROUNDUP_TO} from '../util/AppConstant';
+import AppConstant, {CONFIG_PRICE_DIVIDED_RANGE, CONFIG_PRICE_ROUNDUP_TO, CONFIG_MAX_PRODUCT_PRICE} from '../util/AppConstant';
 import {UndoOutlined} from '@ant-design/icons';
 
 const { Search } = Input;
@@ -25,34 +25,36 @@ class SideMenu extends Component {
         this.onChangeBrandCountry = this.onChangeBrandCountry.bind(this);
         this.clearBrandQueryCountry = this.clearBrandQueryCountry.bind(this);
 
-        // this.onChangeAttribute = this.onChangeAttribute.bind(this);
+        this.onChangeAttribute = this.onChangeAttribute.bind(this);
         this.onChangePriceRangeRadio = this.onChangePriceRangeRadio.bind(this);
         this.onChangePriceRangeSliderFrom = this.onChangePriceRangeSliderFrom.bind(this);
         this.onChangePriceRangeSliderTo = this.onChangePriceRangeSliderTo.bind(this);
         this.onSubmitPriceRange = this.onSubmitPriceRange.bind(this);
-        // this.clearPriceRange = this.clearPriceRange.bind(this);
-        
-        
-        // this.clearAttributeQuery = this.clearAttributeQuery.bind(this);
+        this.clearPriceRange = this.clearPriceRange.bind(this);
+        this.clearAttributeQuery = this.clearAttributeQuery.bind(this);
+
         // this.onChangeCategoryQuery = this.onChangeCategoryQuery.bind(this);
         // this.clearCategoryQuery =  this.clearCategoryQuery.bind(this);
+
+        this.priceRangeQuery = [];
         this.state = {
             curPriceName: -1,
             curPriceFrom: 0,
-            curPriceTo: 1000000000,
+            curPriceTo: CONFIG_MAX_PRODUCT_PRICE,
             curPriceSliderFrom: 0,
             curPriceSliderTo: 0,
             filterInfo: {
                 brands: [],
                 brandCountries:[],
                 attributes:[],
+                attributesIds:[],
                 priceRange:{}
             }
         }
         // filterInfo{
         //     brands:[], // list of brand ID, if empty mean All
         //     brandCountries:[], // list of ID
-        //     attributes:[], // list of ID,
+        //     attributes:[], // list of {Name: "MauSac", ID, Value: "Green"}
         //     priceRange:{} // {name: 1, from: m to:}; name is start from 1, just the Range in Query
         // };
     }
@@ -433,17 +435,28 @@ class SideMenu extends Component {
 
 
 
-
-    onChangeAttribute(id, name) {
+    //list of {Name: "MauSac", id}
+    onChangeAttribute(id, name, value) {
         console.log("Attribute ID:" + name + ":" + id);
         let oldFilter = [...this.state.filterInfo.attributes];
-        
-        if (oldFilter.indexOf(id) < 0) {
-            oldFilter.push(id);
-        } else {
-            oldFilter.splice(oldFilter.indexOf(id), 1);
+        let attributesIds = [...this.state.filterInfo.attributesIds];
+        let isExist = false;
+        let indexOfExist = -1;
+        for (let i = 0; i < oldFilter.length; i++) {
+            if (oldFilter[i].id == id) {
+                isExist = true;
+                indexOfExist = i;
+                break;
+            }
         }
-        let newFilterInfo = {...this.state.filterInfo, attributes: oldFilter};
+        if (!isExist) {
+            oldFilter.push({id, Name: name, Value: value});
+            attributesIds.push(id);
+        } else {
+            oldFilter.splice(indexOfExist, 1);
+            attributesIds.splice(indexOfExist, 1);
+        }
+        let newFilterInfo = {...this.state.filterInfo, attributes: oldFilter, attributesIds};
         this.setState({
             filterInfo: newFilterInfo
         })
@@ -451,20 +464,40 @@ class SideMenu extends Component {
 
         this.props.onFilterProduct(newFilterInfo)
     }
-    clearAttributeQuery() {
-        // name -1 mean Clear
-        let newFilterInfo = {...this.state.filterInfo, attributes: []};
+    // name is MauSac 
+    clearAttributeQuery(name) {
+        console.log("Clear Attribute ID:" + name);
+        let oldFilter = [...this.state.filterInfo.attributes];
+        let attributesIds = [...this.state.filterInfo.attributesIds];
+        let isExist = false;
+        let indexOfExist = -1;
+        for (let i = oldFilter.length-1; i >= 0; i--) {
+            if (oldFilter[i].Name == name) {
+                // Remove this Ids
+                if (attributesIds && attributesIds.length) {
+                    attributesIds.splice(attributesIds.indexOf(oldFilter[i].id), 1);
+                }
+                
+                // Remove this Attribute Filter
+                oldFilter.splice(i, 1);
+                
+            }
+        }
+
+        let newFilterInfo = {...this.state.filterInfo, attributes: oldFilter, attributesIds};
         this.setState({
             filterInfo: newFilterInfo
         })
+        console.log(newFilterInfo)
+
         this.props.onFilterProduct(newFilterInfo)
     }
     renderFilterAttributes() {
         //Parse to output
         // {
         //     "MauSac": [
-        //             {name: Xanh, id:2, count: 5},
-        //             {name: Do, id:3, count: 6}
+        //             {Name: MauSac, Value: Xanh, id:2, count: 5},
+        //             {Name: MauSac, Value: Do, id:3, count: 6}
         //         ]
         //     }
         // }
@@ -479,9 +512,9 @@ class SideMenu extends Component {
                 element.prod_attributes.forEach(att => {
                     if (!attributes[""+att.Name]) {
                         attributes[""+att.Name] = [
-                            {'Name': att.Value, "id": att.id}]
+                            {'Name': att.Name,'Value': att.Value, "id": att.id}]
                     } else {
-                        attributes[""+att.Name].push({'Name': att.Value, "id": att.id})
+                        attributes[""+att.Name].push({'Name': att.Name,'Value': att.Value, "id": att.id})
                     }
     
                     if (attributesCount[""+att.id]) {
@@ -498,7 +531,7 @@ class SideMenu extends Component {
 
             for (var prop in attributes) {
                 if (Object.prototype.hasOwnProperty.call(attributes, prop)) {
-                    
+                    let AttName = prop;
                     var attribute = attributes[""+prop];
                     let subValue = [];
                     attribute.forEach(element => {
@@ -507,11 +540,11 @@ class SideMenu extends Component {
                             <Checkbox
                                 key={element.id}
                                 name={""+element.Name}
-                                onChange={() => this.onChangeAttribute(element.id, element.Name)}
-                                checked={(this.state.filterInfo.attributes.length > 0 && 
-                                    this.state.filterInfo.attributes.indexOf((""+element.id)) >= 0)}
+                                onChange={() => this.onChangeAttribute(element.id, element.Name, element.Value)}
+                                checked={(this.state.filterInfo.attributesIds.length > 0 && 
+                                    this.state.filterInfo.attributesIds.indexOf((""+element.id)) >= 0)}
                             >
-                                {element.Name+"(" + attributesCount[""+element.id] + ")"}
+                                {element.Value+"(" + attributesCount[""+element.id] + ")"}
                             </Checkbox>
                             <br />
                             </React.Fragment>
@@ -520,7 +553,7 @@ class SideMenu extends Component {
                     content.push(
                         <Card size="small" title={prop} style={{marginTop: "10px"}} key={prop}
                         extra={<Tooltip title="Xoá Lọc"><Button shape="circle" type="primary"  size="small" key={prop}
-                        // onClick={this.clearAttributeQuery.bind(this, prop)}
+                            onClick={() => this.clearAttributeQuery(AttName)}
                         >
                             <UndoOutlined style={{fontSize:"20px", color:"white"}}/>
                         </Button></Tooltip>}>
@@ -534,6 +567,9 @@ class SideMenu extends Component {
             return null;
         }
     }
+
+
+
 
     renderFilterPriceRange() {
         let priceRangeQuery = [];
@@ -580,12 +616,16 @@ class SideMenu extends Component {
 
         let radioViews = [];
         let sliderFromMin = 0;
-        let sliderFromMax = 10000000;
+        let sliderFromMax = CONFIG_MAX_PRODUCT_PRICE;
         let sliderToMin = 0;
-        let sliderToMax = 10000000;
+        let sliderToMax = CONFIG_MAX_PRODUCT_PRICE;
         // Whole Slider should have 20 Range Steps only
         let sliderFromStep = 10000; // Default Step is 10000
         let sliderToStep = 10000;
+
+        // Set priceRangeQuery current---------------------------------
+        this.priceRangeQuery = priceRangeQuery;
+
         if (priceRangeQuery.length > 0) {
             priceRangeQuery.forEach((item, index) => {
                 if (index == 0) {
@@ -612,7 +652,7 @@ class SideMenu extends Component {
                     <UndoOutlined style={{fontSize:"20px", color:"white"}}/>
             </Button></Tooltip>}>
                 <Radio.Group 
-                // onChange={this.onChangePriceRangeRadio} value={this.state.curPriceName}
+                  onChange={this.onChangePriceRangeRadio} value={this.state.curPriceName}
                 >
                     {radioViews}
                 </Radio.Group>
@@ -683,7 +723,7 @@ class SideMenu extends Component {
                             max={sliderToMax}
                             step={sliderToStep}
                             style={{ width: "100%"}}
-                            value={(this.state.curPriceSliderTo == 0 ? sliderFromMax : this.state.curPriceSliderTo)}
+                            value={(this.state.curPriceSliderTo)}
                             onChange={this.onChangePriceRangeSliderTo}
                         />
                     </Col>
@@ -698,7 +738,7 @@ class SideMenu extends Component {
                             step={sliderToStep}
                             onChange={this.onChangePriceRangeSliderTo}
                             value={typeof this.state.curPriceSliderTo === 'number' ? 
-                            (this.state.curPriceSliderTo == 0 ? sliderFromMax : this.state.curPriceSliderTo) : 0}
+                            (this.state.curPriceSliderTo ) : 0}
                         />
                     </Col>
                 </Row>
@@ -745,7 +785,12 @@ class SideMenu extends Component {
         }
         if (to >= from && to > 0) {
             // ONly query when To > From
-            //this.props.actQueryChangePriceRange(this.props.query, from, to)
+            let newFilterInfo = {...this.state.filterInfo, priceRange: {from, to}};
+            this.setState({
+                filterInfo: newFilterInfo
+            })
+            console.log(newFilterInfo)
+            this.props.onFilterProduct(newFilterInfo)
         }
         
     }
@@ -753,8 +798,8 @@ class SideMenu extends Component {
         console.log("onChangePriceRangeRadio:" + e.target.value)
 
         // Found the name in propsPriceRangeQuery
-        if (this.props.product.priceRangeQuery.length > 0) {
-            this.props.product.priceRangeQuery.forEach(item => {
+        if (this.priceRangeQuery.length > 0) {
+            this.priceRangeQuery.forEach(item => {
                 if (item.name == e.target.value) {
                     this.setState({
                         curPriceName:e.target.value,
@@ -765,7 +810,14 @@ class SideMenu extends Component {
                     })
                     if (item.to >= item.from && item.to > 0) {
                         // ONly query when To > From
-                        //this.props.actQueryChangePriceRange(this.props.query, item.from, item.to)
+
+                        let newFilterInfo = {...this.state.filterInfo, priceRange: {from: item.from, to: item.to}};
+                        this.setState({
+                            filterInfo: newFilterInfo
+                        })
+                        console.log(newFilterInfo)
+
+                        this.props.onFilterProduct(newFilterInfo)
                     }
                 }
             })
@@ -777,7 +829,7 @@ class SideMenu extends Component {
             curPriceSliderFrom: value,
             curPriceName: -1,
             curPriceFrom: 0,
-            curPriceTo: 1000000000,
+            curPriceTo: CONFIG_MAX_PRODUCT_PRICE,
         })
     }
     onChangePriceRangeSliderTo(value) {
@@ -785,18 +837,23 @@ class SideMenu extends Component {
             curPriceSliderTo: value,
             curPriceName: -1,
             curPriceFrom: 0,
-            curPriceTo: 1000000000,
+            curPriceTo: CONFIG_MAX_PRODUCT_PRICE,
         })
     }
     clearPriceRange() {
         this.setState({
             curPriceName: -1,
             curPriceFrom: 0,
-            curPriceTo: 1000000000,
+            curPriceTo: CONFIG_MAX_PRODUCT_PRICE,
             curPriceSliderFrom: 0,
             curPriceSliderTo: 0
         })
-        //this.props.actQueryChangePriceRange(this.props.query, 0, 0)
+        let newFilterInfo = {...this.state.filterInfo, priceRange: {from: 0, to: CONFIG_MAX_PRODUCT_PRICE}};
+        this.setState({
+            filterInfo: newFilterInfo
+        })
+        console.log(newFilterInfo)
+        this.props.onFilterProduct(newFilterInfo)
     }
 }
 
