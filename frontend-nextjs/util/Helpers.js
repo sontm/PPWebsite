@@ -794,6 +794,102 @@ class Helpers {
         console.log(result)
         return result;
     }
+
+    // filterInfo{
+    //     brands:[], // list of brand ID, if empty mean All
+    //     brandCountries:[], // list of ID
+    //     attributes:[], list of {Name: "MauSac", ID, Value: "Green"},
+    //     priceRange:{} // {from:, to:}; name is start from 1, just the Range in Query
+    // };
+    getFilteredProduct(allProducts, filterInfo) {
+        let displayProducts = [];
+        allProducts.forEach(element => {
+            // if Filter Brand, only add element of that Brand
+            if (!filterInfo.brands.length || // if No Selected, means all
+                    (filterInfo.brands.length > 0 && filterInfo.brands.indexOf(element.prod_brand.id) >= 0)) {
+                // This product have category same as Filtering
+
+                // Check another Filter criteria: Brand Country
+                if (!filterInfo.brandCountries.length || // if No Selected, means all
+                    (filterInfo.brandCountries.length > 0 && filterInfo.brandCountries.indexOf(element.prod_brand.prod_country) >= 0)) {
+
+
+                    // if Filter Category, only add element of that Category
+                    if (!filterInfo.categories.length || // if No Selected, means all
+                        (filterInfo.categories.length > 0 && filterInfo.categories.indexOf(element.prod_category.id) >= 0)) {
+
+                        // Check Satisfy Price range
+                        if (element.UnitPrice >= filterInfo.priceRange.from && element.UnitPrice <= filterInfo.priceRange.to) {
+                            if (!filterInfo.attributes.length) { // if No Selected, means all 
+                                displayProducts.push(element)
+                            } else {
+                                // Need Satisfy All Selected Filter
+
+                                let foundCount = 0;
+                                let differentFilterName = [];
+                                for (let j = 0; j < filterInfo.attributes.length; j++) {
+                                    if (differentFilterName.indexOf(filterInfo.attributes[j].Name) < 0) {
+                                        differentFilterName.push(filterInfo.attributes[j].Name);
+                                    }
+                                    for (let i = 0; i < element.prod_attributes.length; i++) {
+                                        // Check another Filter criteria: Attribute
+                                        if (filterInfo.attributes[j].Name == element.prod_attributes[i].Name) { // This is same Kind Filter
+                                            if (filterInfo.attributes[j].id == element.prod_attributes[i].id) {
+                                                foundCount++;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (foundCount == differentFilterName.length) {
+                                    displayProducts.push(element)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        })
+        return displayProducts;
+    }
+
+    // sorting: popular, new, discount, lowprice, highprice and searchname
+    sortProduct (sorting, searchname, products) {
+        if (products && products.length) {
+            let productFilters = [...products];
+            // Second, Sorting based on filter
+            if (sorting == "lowprice") {
+                productFilters.sort((a, b) =>
+                    (a.UnitPrice > b.UnitPrice) ? 1 : -1
+                );
+            } else if (sorting == "highprice") {
+                productFilters.sort((a, b) =>
+                    (a.UnitPrice < b.UnitPrice) ? 1 : -1
+                );
+            }
+            // TODO for New Product, Discount Product
+
+            // Apply Search for all Name
+            if (searchname) {
+                searchname = searchname.trim();
+            }
+            if (searchname && searchname.length > 0) {
+                productFilters = productFilters.filter(product => {
+                    // Search substring using indexOf instead of includes for IE support
+                    if (this.changeVietnameseToNonSymbol(product.Name).indexOf(
+                            this.changeVietnameseToNonSymbol(searchname)) !== -1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+            return productFilters;
+        } else {
+            return [];
+        }
+    }
 }
 const helpers = new Helpers();
 export default helpers;

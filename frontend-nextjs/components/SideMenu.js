@@ -5,7 +5,7 @@ import { Checkbox, Slider, InputNumber, Radio, Tooltip } from 'antd';
 import Link from 'next/link'
 import styles from './SideMenu.module.css';
 import AppConstant, {CONFIG_PRICE_DIVIDED_RANGE, CONFIG_PRICE_ROUNDUP_TO, CONFIG_MAX_PRODUCT_PRICE} from '../util/AppConstant';
-import {UndoOutlined} from '@ant-design/icons';
+import {CloseCircleOutlined} from '@ant-design/icons';
 
 const { Search } = Input;
 const Sider = Layout.Sider;
@@ -33,8 +33,8 @@ class SideMenu extends Component {
         this.clearPriceRange = this.clearPriceRange.bind(this);
         this.clearAttributeQuery = this.clearAttributeQuery.bind(this);
 
-        // this.onChangeCategoryQuery = this.onChangeCategoryQuery.bind(this);
-        // this.clearCategoryQuery =  this.clearCategoryQuery.bind(this);
+        this.onChangeCategory = this.onChangeCategory.bind(this);
+        this.clearCategoryQuery =  this.clearCategoryQuery.bind(this);
 
         this.priceRangeQuery = [];
         this.state = {
@@ -46,6 +46,7 @@ class SideMenu extends Component {
             filterInfo: {
                 brands: [],
                 brandCountries:[],
+                categories: [],
                 attributes:[],
                 attributesIds:[],
                 priceRange:{}
@@ -54,6 +55,7 @@ class SideMenu extends Component {
         // filterInfo{
         //     brands:[], // list of brand ID, if empty mean All
         //     brandCountries:[], // list of ID
+        //     categories: [], // List of ID
         //     attributes:[], // list of {Name: "MauSac", ID, Value: "Green"}
         //     priceRange:{} // {name: 1, from: m to:}; name is start from 1, just the Range in Query
         // };
@@ -332,6 +334,7 @@ class SideMenu extends Component {
         let brandCountryIds=[];
         let brandCountryAll = {};
         let brandCountryCount = {};
+        // only display when in Main Category Page
         if (this.props.curCateId && this.props.countries && this.props.countries.length) {
             this.props.countries.forEach(element => {
                 if (!brandCountryAll[""+element.id]) {
@@ -342,7 +345,7 @@ class SideMenu extends Component {
 
         if (this.props.curCateId && this.props.data && this.props.data.length) {
             this.props.data.forEach(element => {
-                if (brandIds.indexOf(element.id) < 0) {
+                if (brandIds.indexOf(element.prod_brand.id) < 0) {
                     // Not Exist, this is new brand
                     brandIds.push(element.prod_brand.id)
                     brandNameList.push(element.prod_brand);
@@ -409,23 +412,110 @@ class SideMenu extends Component {
             return (
                 <React.Fragment key={'brand-country'}>
                 <Card size="small" title="Thuong Hieu" style={{marginTop: "10px"}}
-                extra={<Tooltip title="Xoá Lọc"><Button shape="circle" type="primary"  size="small" 
+                extra={<Tooltip title="Xoá Lọc"><Button type="primary"  size="small" 
                     onClick={this.clearBrandQuery}
                     >
-                    <UndoOutlined style={{fontSize:"20px", color:"white"}}/>
+                    <CloseCircleOutlined style={{fontSize:"12px", color:"white"}}/>
+                    Clear
                 </Button></Tooltip>}>
                     {content}
                 </Card>
 
                 <Card size="small" title="Xua Xu Thuong Hieu" style={{marginTop: "10px"}}
-                extra={<Tooltip title="Xoá Lọc"><Button shape="circle" type="primary"  size="small" 
+                extra={<Tooltip title="Xoá Lọc"><Button type="primary"  size="small" 
                     onClick={this.clearBrandQueryCountry}
                     >
-                    <UndoOutlined style={{fontSize:"20px", color:"white"}}/>
+                    <CloseCircleOutlined style={{fontSize:"12px", color:"white"}}/>
+                    Clear
                 </Button></Tooltip>}>
                     {contentBrandCountry}
                 </Card>
                 </React.Fragment>
+            )
+        } else {
+            return null;
+        }
+    }
+
+
+
+    onChangeCategory(id, name) {
+        console.log("CategoryID:" + name + ":" + id);
+        let oldData = [...this.state.filterInfo.categories];
+        
+        if (oldData.indexOf(id) < 0) {
+            // Include Brand
+            oldData.push(id);
+        } else {
+            oldData.splice(oldData.indexOf(id), 1);
+        }
+        let newFilterInfo = {...this.state.filterInfo, categories: oldData};
+        this.setState({
+            filterInfo: newFilterInfo
+        })
+        console.log(newFilterInfo)
+
+        this.props.onFilterProduct(newFilterInfo)
+    }
+    clearCategoryQuery() {
+        // name -1 mean Clear
+        let newFilterInfo = {...this.state.filterInfo, categories: []};
+        this.setState({
+            filterInfo: newFilterInfo
+        })
+        this.props.onFilterProduct(newFilterInfo)
+    }
+    renderFilterCategory() {
+        // filter Brands of current data Product
+        let categoryNameList=[];
+        let categoryIds = [];
+        let categoryProductCount = {};
+
+        // only display when in Main Brand Page
+        if (this.props.curBrandId && this.props.data && this.props.data.length) {
+            this.props.data.forEach(element => {
+                if (categoryIds.indexOf(element.prod_category.id) < 0) {
+                    // Not Exist, this is new brand
+                    categoryIds.push(element.prod_category.id)
+                    categoryNameList.push(element.prod_category);
+                    if (categoryProductCount[""+element.prod_category.id]) {
+                        categoryProductCount[""+element.prod_category.id]++;
+                    } else{
+                        categoryProductCount[""+element.prod_category.id] = 1;
+                    }
+                }
+            })
+        }
+        if ( categoryNameList.length > 0) {
+            const content = [];
+            categoryNameList.forEach(element => {
+                content.push(
+                    <React.Fragment key={element.id}>
+                    <Checkbox
+                        key={element.id}
+                        name={element.Name}
+                        onChange={() => this.onChangeCategory(element.id, element.Name)}
+                        checked={(this.state.filterInfo.categories.length > 0 && 
+                            this.state.filterInfo.categories.indexOf((""+element.id)) >= 0)}
+                    >
+                        {element.Name + 
+                            "(" + categoryProductCount[""+element.id] + ")"}
+                    </Checkbox>
+                    <br />
+                    </React.Fragment>
+                )   
+            })
+
+            return (
+                <Card size="small" title="Danh Muc" style={{marginTop: "10px"}}
+                extra={<Tooltip title="Xoá Lọc"><Button type="primary"  size="small" 
+                    onClick={this.clearCategoryQuery}
+                    >
+                    <CloseCircleOutlined style={{fontSize:"12px", color:"white"}}/>
+                    Clear
+                </Button></Tooltip>}>
+                    {content}
+                </Card>
             )
         } else {
             return null;
@@ -469,15 +559,13 @@ class SideMenu extends Component {
         console.log("Clear Attribute ID:" + name);
         let oldFilter = [...this.state.filterInfo.attributes];
         let attributesIds = [...this.state.filterInfo.attributesIds];
-        let isExist = false;
-        let indexOfExist = -1;
         for (let i = oldFilter.length-1; i >= 0; i--) {
             if (oldFilter[i].Name == name) {
-                // Remove this Ids
+                // Remove this Ids. NOTE: REMOVE before oldFilter.splice
                 if (attributesIds && attributesIds.length) {
                     attributesIds.splice(attributesIds.indexOf(oldFilter[i].id), 1);
                 }
-                
+
                 // Remove this Attribute Filter
                 oldFilter.splice(i, 1);
                 
@@ -552,10 +640,11 @@ class SideMenu extends Component {
                     })
                     content.push(
                         <Card size="small" title={prop} style={{marginTop: "10px"}} key={prop}
-                        extra={<Tooltip title="Xoá Lọc"><Button shape="circle" type="primary"  size="small" key={prop}
+                        extra={<Tooltip title="Xoá Lọc"><Button type="primary"  size="small" key={prop}
                             onClick={() => this.clearAttributeQuery(AttName)}
                         >
-                            <UndoOutlined style={{fontSize:"20px", color:"white"}}/>
+                            <CloseCircleOutlined style={{fontSize:"12px", color:"white"}}/>
+                            Clear
                         </Button></Tooltip>}>
                             {subValue}
                         </Card>
@@ -648,8 +737,9 @@ class SideMenu extends Component {
         }
         return (
             <Card size="small" title="Gia" style={{marginTop: "10px"}} 
-            extra={<Tooltip title="Xoá Lọc"><Button shape="circle" type="primary"  size="small" onClick={this.clearPriceRange}>
-                    <UndoOutlined style={{fontSize:"20px", color:"white"}}/>
+            extra={<Tooltip title="Xoá Lọc"><Button type="primary"  size="small" onClick={this.clearPriceRange}>
+                    <CloseCircleOutlined style={{fontSize:"12px", color:"white"}}/>
+                    Clear
             </Button></Tooltip>}>
                 <Radio.Group 
                   onChange={this.onChangePriceRangeRadio} value={this.state.curPriceName}
@@ -760,6 +850,7 @@ class SideMenu extends Component {
                 {this.renderBrandMain()}
 
                 {this.renderFilterBrand()}
+                {this.renderFilterCategory()}
                 {this.renderFilterPriceRange()}
                 {this.renderFilterAttributes()}
                 

@@ -25,9 +25,15 @@ class Category extends React.Component {
         super(props);
 
         this.onFilterProduct = this.onFilterProduct.bind(this);
+        this.onSortingProducts = this.onSortingProducts.bind(this);
+        
+        this.onChangeSearchFilter = this.onChangeSearchFilter.bind(this);
 
         this.state = {
-            displayProducts: null, // INITIAL value is NULL, means display All
+            displayProducts: [], // INITIAL value is NULL, means display All
+            sortedProducts: [],
+            filterBar: "popular",
+            searchTerm: ""
         }
     }
 
@@ -42,59 +48,114 @@ class Category extends React.Component {
         console.log(filterInfo)
 
         // Filter Products with Brands, Attribute
-        let displayProducts = [];
-        this.props.data.forEach(element => {
-            // if Filter Brand, only add element of that Brand
-            if (!filterInfo.brands.length || // if No Selected, means all
-                    (filterInfo.brands.length > 0 && filterInfo.brands.indexOf(element.prod_brand.id) >= 0)) {
-                // This product have category same as Filtering
-
-                // Check another Filter criteria: Brand Country
-                if (!filterInfo.brandCountries.length || // if No Selected, means all
-                    (filterInfo.brandCountries.length > 0 && filterInfo.brandCountries.indexOf(element.prod_brand.prod_country) >= 0)) {
-
-
-                    // Check Satisfy Price range
-                    if (element.UnitPrice >= filterInfo.priceRange.from && element.UnitPrice <= filterInfo.priceRange.to) {
-                        if (!filterInfo.attributes.length) { // if No Selected, means all 
-                            displayProducts.push(element)
-                        } else {
-                            // Need Satisfy All Selected Filter
-
-                            let foundCount = 0;
-                            let differentFilterName = [];
-                            for (let j = 0; j < filterInfo.attributes.length; j++) {
-                                if (differentFilterName.indexOf(filterInfo.attributes[j].Name) < 0) {
-                                    differentFilterName.push(filterInfo.attributes[j].Name);
-                                }
-                                for (let i = 0; i < element.prod_attributes.length; i++) {
-                                    // Check another Filter criteria: Attribute
-                                    if (filterInfo.attributes[j].Name == element.prod_attributes[i].Name) { // This is same Kind Filter
-                                        if (filterInfo.attributes[j].id == element.prod_attributes[i].id) {
-                                            foundCount++;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (foundCount == differentFilterName.length) {
-                                displayProducts.push(element)
-                            }
-                        }
-                    }
-                }
-            }
-            
-        })
+        let displayProducts = Helpers.getFilteredProduct(this.props.data, filterInfo);
         this.setState({
             displayProducts
         });
     }
 
+    onSortingProducts (filterBar) {
+        console.log(' Sorting Name:' +filterBar);
+        let dataToDisplay = (this.state.displayProducts && this.state.displayProducts.length) ? this.state.displayProducts : this.props.data;
+        let sortedProducts = Helpers.sortProduct(filterBar, this.state.searchTerm, dataToDisplay);
+        console.log(sortedProducts)
+        this.setState({
+            filterBar,
+            sortedProducts,
+        });
+    };
+
+    // If support Search when typing, use this
+    onChangeSearchFilter(e) {
+        let searchTerm = e.target.value
+        //if (e.target.value=="" || e.target.value.length <= 0) {
+        if(this.timeout) {
+            // When duing 500ms, User typing new character, stop timeout, no need to search
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(() => {
+            let dataToDisplay = (this.state.displayProducts && this.state.displayProducts.length) ? this.state.displayProducts : this.props.data;
+            let sortedProducts = Helpers.sortProduct(this.state.filterBar, searchTerm, dataToDisplay);
+            this.setState({
+                searchTerm,
+                sortedProducts,
+            });
+        },500);
+    }
+
+    renderFilterBar() {
+        return (
+            <div className={styles['product-filter']}>
+                <Row>
+                <Col xs={0} sm={0} md={0} lg={24} xl={16} xxl={16}>
+                    <span className={styles['filter-option']}>Sắp Xếp:</span>
+                    <Button type={this.state.filterBar=="popular" ? "danger" : "dashed"} size="large" 
+                        className={styles['filter-option']}
+                            name="popular" onClick={() => this.onSortingProducts("popular")}>
+                        Bán Chạy
+                    </Button>
+                    <Button type={this.state.filterBar=="new" ? "danger" : "dashed"} size="large" 
+                        className={styles['filter-option']}
+                            name="new" onClick={() => this.onSortingProducts("new")}>
+                        Hàng Mới
+                    </Button>
+                    <Button type={this.state.filterBar=="discount" ? "danger" : "dashed"} size="large"
+                    className={styles['filter-option']}
+                            name="discount" onClick={() => this.onSortingProducts("discount")}>
+                        Giảm Giá
+                    </Button>
+                    <Button type={this.state.filterBar=="lowprice" ? "danger" : "dashed"} size="large" 
+                    className={styles['filter-option']}
+                            name="lowprice" onClick={() => this.onSortingProducts("lowprice")}>
+                        Giá Thấp
+                    </Button>
+                    <Button type={this.state.filterBar=="highprice" ? "danger" : "dashed"} size="large" 
+                    className={styles['filter-option']}
+                            name="highprice" onClick={() => this.onSortingProducts("highprice")}>
+                        Giá Cao
+                    </Button>
+                </Col>
+                {/* {For Mobile UI} */}
+                <Col xs={24} sm={24} md={24} lg={0} xl={0} xxl={0}>
+                    <Row>
+                    <Col xs={8} sm={6} span={6}>
+                    <span className={styles['filter-option']}>Sắp Xếp:</span>
+                    </Col>
+                    <Col xs={16} sm={18} span={18}>
+                    <Select defaultValue="popular" style={{width: "100%"}}>
+                        <Option value="popular">Bán Chạy</Option>
+                        <Option value="new">Hàng Mới</Option>
+                        <Option value="discount">Giảm Giá</Option>
+                        <Option value="lowprice">Giá Thấp</Option>
+                        <Option value="highprice">Giá Cao</Option>
+                    </Select>
+                    </Col>
+                    </Row>
+                </Col>
+                <Col xs={0} sm={0} md={0} lg={0} xl={8} xxl={8}>
+                    <Search
+                        placeholder="Search product"
+                        enterButton
+                        size="large"
+                        // onSearch={value => this.onSearchFilter(value)}
+                        onChange={e => this.onChangeSearchFilter(e)}
+                    />
+                </Col>
+                </Row>
+            </div>
+        );
+    }
+
     render() {
         const { data, categories, curCateId, categoriesLevel, brands, countries } = this.props;
         let producView = [];
-        let dataToDisplay = this.state.displayProducts ? this.state.displayProducts : data;
+
+        // CHeck if Filtered
+        let dataToDisplay = (this.state.displayProducts && this.state.displayProducts.length) ? this.state.displayProducts : data;
+        // Check if is Sorting
+        if (this.state.searchTerm != "" || this.state.filterBar != "popular") {
+            dataToDisplay = (this.state.sortedProducts&&this.state.sortedProducts.length) ? this.state.sortedProducts : dataToDisplay;
+        }
         if (dataToDisplay.length > 0) {
             dataToDisplay.forEach(element => {
                 //ViewPort: xs <576px,sm	≥576px, md	≥768px, lg	≥992px, xl	≥1200px, xxl≥1600px
@@ -111,14 +172,15 @@ class Category extends React.Component {
             </Head>
             
             <Row>
-                <Col xs={0} sm={0} md={6} lg={5} xl={4} xxl={4}>
+                <Col xs={0} sm={0} md={6} lg={5} xl={5} xxl={5}>
                 <div className={styles['categorylist-sidemenu']}>
                     <SideMenu categories={categories} brands={brands} curCateId={curCateId} 
                         categoriesLevel={categoriesLevel} data={data} countries={countries}
                         onFilterProduct={this.onFilterProduct} />
                 </div>
                 </Col>
-                <Col xs={24} sm={24} md={18} lg={19} xl={20} xxl={20}>
+                <Col xs={24} sm={24} md={18} lg={19} xl={19} xxl={19}>
+                    {this.renderFilterBar()}
                     <Row type="flex">
                         {producView}
                     </Row>
@@ -127,6 +189,8 @@ class Category extends React.Component {
             </MyLayout>
         )
     }
+
+    
 }
 
 export default Category;
