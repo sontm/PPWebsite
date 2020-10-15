@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "app_post_categories",
+  "info": {
+    "name": "AppPostCategory"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "Desc": {
+      "type": "string"
+    },
+    "DisplayOrder": {
+      "type": "integer"
+    },
+    "app_posts": {
+      "via": "app_post_category",
+      "collection": "app-post"
+    },
+    "urlname": {
+      "type": "string"
+    }
+  }
+}

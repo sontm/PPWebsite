@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "app_news",
+  "collectionName": "app_posts",
   "info": {
-    "name": "AppNew"
+    "name": "AppPost"
   },
   "options": {
     "increments": true,
@@ -10,15 +10,13 @@
   },
   "attributes": {
     "Title": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
-    "ShortDescription": {
-      "type": "text"
+    "Desc": {
+      "type": "richtext"
     },
     "Content": {
-      "type": "richtext",
-      "required": true
+      "type": "richtext"
     },
     "Images": {
       "collection": "file",
@@ -32,7 +30,15 @@
       "required": false
     },
     "PublishedDate": {
-      "type": "date"
+      "type": "datetime"
+    },
+    "app_post_category": {
+      "model": "app-post-category",
+      "via": "app_posts"
+    },
+    "IsHighlight": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

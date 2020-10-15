@@ -213,7 +213,6 @@ class SideMenu extends Component {
                         openKeys={openKeys}
                         mode="inline"
                         inlineIndent={20}
-                        onClick={this.onSideMenuItemClick}
                         style={{borderTop:"1px solid #e8e8e8", paddingTop:"0px"}}
                     >
                         {subMenusFirst}
@@ -258,7 +257,6 @@ class SideMenu extends Component {
                         selectedKeys={selectedKeys}
                         mode="inline"
                         inlineIndent={20}
-                        onClick={this.onSideMenuItemClick}
                         style={{borderTop:"1px solid #e8e8e8", paddingTop:"0px"}}
                     >
                         {content}
@@ -602,7 +600,16 @@ class SideMenu extends Component {
                         attributes[""+att.Name] = [
                             {'Name': att.Name,'Value': att.Value, "id": att.id}]
                     } else {
-                        attributes[""+att.Name].push({'Name': att.Name,'Value': att.Value, "id": att.id})
+                        // if attribute not exist, push
+                        let isExistVal = false;
+                        for (let l = 0; l < attributes[""+att.Name].length; l++) {
+                            if (attributes[""+att.Name][l].Value == att.Value) {
+                                isExistVal = true;
+                            }
+                        }
+                        if (!isExistVal) {
+                            attributes[""+att.Name].push({'Name': att.Name,'Value': att.Value, "id": att.id})
+                        }
                     }
     
                     if (attributesCount[""+att.id]) {
@@ -614,6 +621,8 @@ class SideMenu extends Component {
                 
             })
         }
+        console.log("attributes^^^^^^^^^^^^^^^^^")
+        console.log(attributes)
         if (Object.keys(attributes).length) {
             let content = [];
 

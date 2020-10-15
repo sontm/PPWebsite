@@ -268,7 +268,7 @@ class AppHeader extends React.Component {
           </Row>
 
           <Row>
-          <Col xs={0} sm={0} md={12} lg={6} xl={6} xxl={4}>
+          <Col xs={0} sm={0} md={8} lg={6} xl={6} xxl={4}>
             <div onMouseEnter={this.onMenuListHover} onMouseLeave={this.onMenuListOut}
               style={{marginLeft:"15px"}} className={styles['hamburger-category-menu']}>
               <MenuOutlined />
@@ -276,7 +276,7 @@ class AppHeader extends React.Component {
             </div>
           </Col>
 
-          <Col xs={0} sm={0} md={12} lg={6} xl={6} xxl={4}>
+          <Col xs={0} sm={0} md={8} lg={6} xl={6} xxl={4}>
             <div onMouseEnter={console.log("this.onBrandMenuHover")} 
                 onMouseLeave={console.log("this.onBrandMenuOut")}
               style={{marginLeft:"15px"}} className={styles['hamburger-category-menu']}>
@@ -284,6 +284,18 @@ class AppHeader extends React.Component {
               <span className={styles['category-menu-text']} >Thương Hiệu</span>
             </div>
           </Col>
+
+          <Col xs={0} sm={0} md={8} lg={6} xl={6} xxl={4}>
+            <Link href="/posts">
+              <a style={{color: "white"}}>
+                <div>
+                <ShopOutlined />
+                <span className={styles['category-menu-text']}>Bai Viet</span>
+                </div>
+              </a>
+            </Link>
+          </Col>
+
           </Row>
 
           {isHomePage ? null : appDropDownMenu}

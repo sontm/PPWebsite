@@ -57,6 +57,13 @@ ul {
   margin-bottom: 5px;
 }
 
+table {
+  width: 95%;
+}
+table, th, td {
+  border: 1px solid grey;
+}
+
 /* FOr Touch Spin (Quantity Increase/Decrease) */
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */

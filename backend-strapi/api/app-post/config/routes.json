@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/app-posts",
+      "handler": "app-post.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/app-posts/count",
+      "handler": "app-post.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/app-posts/:id",
+      "handler": "app-post.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/app-posts",
+      "handler": "app-post.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/app-posts/:id",
+      "handler": "app-post.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/app-posts/:id",
+      "handler": "app-post.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

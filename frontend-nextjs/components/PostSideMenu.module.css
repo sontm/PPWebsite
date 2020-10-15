@@ -1,0 +1,46 @@
+.app-side-menu {
+    margin-right: 3px;
+}
+/* TO Hidden the Array in Sub Menu */
+.app-side-menu .ant-menu-submenu-arrow {
+    display: none !important;
+}
+
+/* .app-side-menu .ant-menu-submenu-open > .ant-menu-submenu-title {
+    font-weight: bold !important;
+    font-size: 1.2em !important;
+} */
+.app-side-menu a {
+    display: block;
+    color: gray;
+}
+
+/* WHen a Side Menu Item selected, set bold */
+.sidemenu-cate-selected {
+    width: 100%;
+    font-weight: bold;
+    background-color: #e6f7ff !important;
+    color: gray;
+}
+
+/* Override ANTD of Right Border on Selected Menu */
+.ant-menu-item::after {
+    border: none !important;
+}
+.app-side-menu .ant-menu-item {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+}
+.ant-menu-item-selected > a {
+    color: gray;
+}
+.ant-menu-inline .ant-menu-submenu-title {
+    padding-right: 5px !important;
+}
+
+.app-card-head {
+    background: #189eff;
+    border-bottom: 1px solid #e8e8e8;
+    border-radius: 2px 2px 0 0;
+    color: white;
+}
