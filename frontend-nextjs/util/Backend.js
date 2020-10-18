@@ -109,6 +109,64 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+
+    // Recent Views, Favorite, Cart---------------------------------------
+    addUserRecentViews(userId, productId, onOK, onError) {
+        axios.post(AppConstants.API_ORDER_URL + "/recent-views",
+            JSON.stringify({'UserID': userId, 'ProductID': productId}),
+        // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    getUserRecentViews(userId, onOK, onError) {
+        axios.get(AppConstants.API_ORDER_URL + "/recent-views?UserID=" + userId,
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    addUserFavorites(userId, productId, onOK, onError) {
+        axios.post(AppConstants.API_ORDER_URL + "/favorites",
+            JSON.stringify({'UserID': userId, 'ProductID': productId}),
+        // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    deleteUserFavorites(itemID, onOK, onError) {
+        axios.delete(AppConstants.API_ORDER_URL + "/favorites/" + itemID,
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    getUserFavorites(userId, onOK, onError) {
+        axios.get(AppConstants.API_ORDER_URL + "/favorites?UserID=" + userId,
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+
+
+    addUserOrder(orderInfo, onOK, onError) {
+        axios.post(AppConstants.API_ORDER_URL + "/orders",
+            JSON.stringify(orderInfo),
+        // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    addUserOrderItem(orderItemInfo, onOK, onError) {
+        axios.post(AppConstants.API_ORDER_URL + "/order-items",
+            JSON.stringify(orderItemInfo),
+        // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
 }
 
 const backend = new Backend();

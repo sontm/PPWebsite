@@ -19,10 +19,10 @@ import dynamic from 'next/dynamic'
 import AppConstants from '../../util/AppConstant'
 
 import { Card, Row, Col, Button, Input } from 'antd';
-import {HeartOutlined, PhoneOutlined, MailOutlined} from '@ant-design/icons';
+import {HeartOutlined, CloseCircleOutlined, MailOutlined} from '@ant-design/icons';
 
 import Helpers from '../../util/Helpers'
-import {actUserUpdateCartItem} from '../../redux/UserReducer';
+import {actUserUpdateCartItem, actUserAddRecentViews, actUserAddFavorites, actUserDeleteFavorites} from '../../redux/UserReducer';
 
 // "Images": [
 //     {
@@ -95,7 +95,8 @@ class Product extends Component {
     constructor(props) {
         super(props);
         this.onAddToCart = this.onAddToCart.bind(this);
-        // this.onAddToFav = this.onAddToFav.bind(this);
+        this.onAddToFav = this.onAddToFav.bind(this);
+        this.onRemoveFromFav = this.onRemoveFromFav.bind(this);
         this.onClickProductDetail = this.onClickProductDetail.bind(this);
         this.onCloseModelImages = this.onCloseModelImages.bind(this);
         this.onClickAttributeNewPrice = this.onClickAttributeNewPrice.bind(this);
@@ -115,18 +116,31 @@ class Product extends Component {
         console.log("onAddToCart:" + this.props.data.Name)
         // Stop onLick of parent to go Product Detail
         e.stopPropagation()
+
+        // Handle both case if User Logined or Not Logined
         this.props.actUserUpdateCartItem(
-            this.props.user.userProfile.id ,
+            this.props.user.userProfile? this.props.user.userProfile.id : null,
             this.props.data.id,
             null
             )
-        if (this.props.user.isLogined) {
-            //this.props.actUserUpdateCartItem(this.props.user.userProfile.id ,this.props.product.id, 1)
-        } else {
-            // TODO check Login
-            //this.props.history.replace({pathname: "/login", state: { from: this.props.location }})
-            //this.props.actCartAddToCart(this.props.product.id)
-        }
+    }
+    onAddToFav(e) {
+        console.log("onAddToFav:" + this.props.data.Name)
+        // Stop onLick of parent to go Product Detail
+        e.stopPropagation()
+
+        // Handle both case if User Logined or Not Logined
+        this.props.actUserAddFavorites(
+            this.props.user.userProfile? this.props.user.userProfile.id : null,
+            this.props.data.id,
+            null
+            )
+    }
+    onRemoveFromFav(itemID) {
+        console.log("onRemoveFromFav:" + itemID)
+
+        // Handle both case if User Logined or Not Logined
+        this.props.actUserDeleteFavorites(itemID)
     }
 
     onClickProductDetail(fromIdx) {
@@ -168,7 +182,8 @@ class Product extends Component {
     }
 
     componentDidMount() {
-        console.log("ProductDetail did mount----------")
+        console.log("ProductDetail did mount----------, params")
+        console.log(this.props.router.query)
         // When have just Receive Product Detail4
         if (this.props.data) {
             if (this.props.data.Images.length > 0) {
@@ -183,6 +198,8 @@ class Product extends Component {
                 })
             }
         }
+        this.props.actUserAddRecentViews((this.props.user && this.props.user.userProfile) ? this.props.user.userProfile.id: null, 
+            this.props.router.query.id);
     }
 
     componentDidUpdate() {
@@ -282,6 +299,21 @@ class Product extends Component {
             }
         }
         console.log(summarizeAttributesArr)
+
+        // CHeck if this is in Favorite
+        let itemIdFavorite = null;
+        if (this.props.user.favorites && this.props.user.favorites.length && this.props.user && 
+                this.props.user.userProfile && this.props.data.id) {
+            for (let i = 0;i < this.props.user.favorites.length; i++) {
+                if (this.props.user.favorites[i].ProductID == this.props.data.id &&
+                        this.props.user.favorites[i].UserID == this.props.user.userProfile.id) {
+                    // Found
+                    itemIdFavorite = this.props.user.favorites[i].id;
+                }
+            }
+        }
+        console.log("itemIdFavorite++++++++++++++++++++++++++")
+        console.log(itemIdFavorite)
         return (
             <MyLayout>
                 
@@ -420,10 +452,18 @@ class Product extends Component {
                                 CHỌN MUA
                             </Button>
 
+                            {!itemIdFavorite ?
                             <Button size={"medium"} type="primary" 
-                            className={styles['btn-addtofav']} onClick={console.log("Add Fav")} title={"Thêm Vào Yêu Thích"}>
+                            className={styles['btn-addtofav']} onClick={this.onAddToFav} title={"Thêm Vào Yêu Thích"}>
                                 <HeartOutlined style={{fontSize: "20px"}}/> Thêm Vào Yêu Thích
                             </Button>
+                            :
+                            <Button size={"medium"} type="primary"  danger
+                            className={styles['btn-addtofav']} onClick={
+                                () => this.onRemoveFromFav(itemIdFavorite)} title={"Xoa Khoi Yêu Thích"}>
+                                <CloseCircleOutlined style={{fontSize: "20px"}}/> Xoa Khoi Yêu Thích
+                            </Button>
+                            }
 
                         </Row>
                         <br />
@@ -447,6 +487,9 @@ const mapStateToProps = (state) => (state);
 const mapDispatchToProps = (dispatch) => {
     return {
         actUserUpdateCartItem: bindActionCreators(actUserUpdateCartItem, dispatch),
+        actUserAddRecentViews: bindActionCreators(actUserAddRecentViews, dispatch),
+        actUserAddFavorites: bindActionCreators(actUserAddFavorites, dispatch),
+        actUserDeleteFavorites: bindActionCreators(actUserDeleteFavorites, dispatch),
     }
 }
   

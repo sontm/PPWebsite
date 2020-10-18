@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recent_views",
+  "info": {
+    "name": "RecentViews"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "UserID": {
+      "type": "string"
+    },
+    "ProductID": {
+      "type": "string"
+    },
+    "When": {
+      "type": "datetime"
+    },
+    "ViewCount": {
+      "type": "integer"
+    }
+  }
+}

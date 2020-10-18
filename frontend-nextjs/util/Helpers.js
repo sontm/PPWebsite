@@ -159,6 +159,15 @@ class Helpers {
     constructor() {
     }
 
+    makeRandomAlphaNumeric(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
     // Co Dau thanh Khong Dau
     changeVietnameseToNonSymbol(alias) {
         var str = alias;
@@ -646,8 +655,6 @@ class Helpers {
         let discounts = [];
         let thisCategoryId = product.prod_category.id;
         let thisBrandId = product.prod_brand.id;
-        console.log("************* thisCategoryId:" + thisCategoryId)
-        console.log("************* thisBrandId:" + thisBrandId)
         // Find the Category of this Product
         for (let i = 0; i < allCategories.length; i++) {
             if (thisCategoryId == allCategories[i].id) {
@@ -664,8 +671,6 @@ class Helpers {
         }
 
         product["combinedDiscounts"] = discounts;
-        console.log("************* combined discount:" + product.Name)
-        console.log(discounts)
         let bestDiscountMoney = 0;
         let curUnit = "";
         let newPrice = product.UnitPrice;

@@ -2,7 +2,7 @@ import Backend from '../util/Backend';
 import Helpers from '../util/Helpers';
 import { notification } from 'antd';
 import AppContant from '../util/AppConstant'
-import {LOCAL_CSRF_TOKEN} from '../util/AppConstant'
+import {LOCAL_CSRF_TOKEN, LOCAL_CARTS, LOCAL_RECENTVIEWS} from '../util/AppConstant'
 
 const USER_LOGIN_OK = 'USER_LOGIN_OK';
 const USER_LOGIN_START = 'USER_LOGIN_START';
@@ -33,9 +33,9 @@ const initialState = {
     isLoading: false,
     isFirstFetched: false,
     userProfile: null,
-    recentViews:[],
+    recentViews:[], // array of {ProductID, UserID (Logined only), When, ViewCount...}
     favorites: [],
-    cartItems: [],
+    cartItems: [], // array of {ProductID, UserID (Logined only), UserID, Quantity...}
     orders: [],
     address: [],
     checkoutAddressId: 0
@@ -135,19 +135,63 @@ export const actUserGetProfile = () => (dispatch) => {
 
 export const actUserUpdateCartItem = (userId, productId, quantity) => (dispatch) => {
     console.log("  actUserUpdateCartItem:" + userId + ",productId:" + productId)
-    Backend.addUserCartItem(userId, productId, quantity,
-        response => {
-            console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-            console.log(response.data)
-            dispatch({
-                type: USER_UPDATE_CARTITEM,
-                payload:  response.data
-            });
-        },
-        error => {
-            console.log("addUserCartItem error")
-            console.log(error)
-        }); 
+    if (userId) {
+        Backend.addUserCartItem(userId, productId, quantity,
+            response => {
+                console.log("addUserCartItem Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                // Active: true
+                // ProductID: "5f57b1eff958e833c62f8d4c"
+                // Quantity: 4
+                // UserID: "5f709e5101479d0499b6243d"
+                // createdAt: "2020-10-04T05:51:20.442Z"
+                // id: "5f7962d73092c0056e3799f4"
+                console.log(response.data)
+                dispatch({
+                    type: USER_UPDATE_CARTITEM,
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("addUserCartItem error")
+                console.log(error)
+            }); 
+    } else {
+        // Add to Local Storage with format: {pid, quantity}
+        let v = localStorage.getItem(LOCAL_CARTS);
+        let cartItems = JSON.parse(v);
+        console.log("^^^^^^^^Carts Storage")
+        console.log(cartItems)
+        let isFound = false;
+        if (cartItems && cartItems.length) {
+            // pid: "5f57b1eff958e833c62f8d4c"
+            // q: 4
+            for (let i = 0; i < cartItems.length; i++) {
+                if (cartItems[i].ProductID == productId) {
+                    // Existed, Increase
+                    cartItems[i].Quantity++;
+                    isFound = true;
+                    break;
+                }
+            }
+            
+            if (!isFound) {
+                // add new 
+                cartItems.push({ProductID: productId, Quantity: 1});
+            }
+            
+        } else {
+            cartItems = [];
+            cartItems.push({ProductID: productId, Quantity: 1});
+        }
+        console.log("^^^^^^^^ New Carts Storage")
+        console.log(cartItems)
+        localStorage.setItem(LOCAL_CARTS, JSON.stringify(cartItems));
+
+        dispatch({
+            type: 'LOCAL_CART_ITEMS',
+            payload:  cartItems
+        });
+    }
 }
 // TODO: Set Active is True
 export const actUserDeleteCartItem = (itemId) => (dispatch) => {
@@ -163,11 +207,14 @@ export const actUserDeleteCartItem = (itemId) => (dispatch) => {
             },
             error => {
                 console.log("deleteUserCartItem error")
+                console.log(error)
             }); 
 }
 
 export const actUserGetCartItems = (userId) => (dispatch) => {
     console.log("  actUserGetCartItems")
+    if (userId) {
+        // Logined
     Backend.getUserCartItems(userId,
         response => {
             console.log("actUserGetCartItems Done&&&&&&&&&&&&&&&&&&&&&&&&6")
@@ -180,6 +227,15 @@ export const actUserGetCartItems = (userId) => (dispatch) => {
         error => {
             console.log("actUserGetCartItems error")
         }); 
+    } else {
+        // Not Login, load from Local
+        let v = localStorage.getItem(LOCAL_CARTS);
+        let cartItems = JSON.parse(v);
+        dispatch({
+            type: 'LOCAL_CART_ITEMS',
+            payload:  cartItems
+        });
+    }
 }
 
 
@@ -207,58 +263,138 @@ export const actUserGetProductsInCart = (productIds) => (dispatch) => {
 
 export const actUserAddRecentViews = (userId, productId) => (dispatch) => {
     console.log("  actUserAddRecentViews:" + userId + ",productId:" + productId)
+    if (userId) {
+        // Logined
     Backend.addUserRecentViews(userId, productId,
         response => {
             console.log("actUserAddRecentViews Done&&&&&&&&&&&&&&&&&&&&&&&&6")
             console.log(response.data)
-        },
-        error => {
-            console.log("actUserAddRecentViews error")
-        }); 
-}
-export const actUserGetRecentViews = (userId) => (dispatch) => {
-    console.log("  actUserGetRecentViews")
-    Backend.getUserRecentViews(userId,
-        response => {
-            console.log("actUserGetRecentViews Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-            console.log(response.data)
+
             dispatch({
-                type: USER_GET_RECENTVIEWS,
+                type: 'USER_UPDATE_RECENTVIEWS',
                 payload:  response.data
             });
         },
         error => {
-            console.log("actUserGetProfile error")
+            console.log("actUserAddRecentViews error")
         }); 
+    } else {
+        // Add to Local Storage
+        // Add to Local Storage with format: {pid, quantity}
+        let v = localStorage.getItem(LOCAL_RECENTVIEWS);
+        let recentViews = JSON.parse(v);
+        console.log("^^^^^^^^RecentViews Storage")
+        console.log(recentViews)
+        let isFound = false;
+        if (recentViews && recentViews.length > 0) {
+            let isFound = false;
+            for (let i = 0; i < recentViews.length; i++) {
+                if (recentViews[i].ProductID == productId) {
+                    // Existed, Remove Old and Add New to First
+                    let newCount = recentViews[i].ViewCount + 1
+
+                    recentViews.splice(i, 1);
+                    
+                    recentViews.push({ProductID: productId, When: Date.now(), ViewCount:newCount})
+                    isFound = true;
+                    break;
+                }
+            }
+            if (!isFound) {
+                // Not Existed
+                recentViews.push({ProductID: productId, When: Date.now(), ViewCount:1})
+            }
+        } else {
+            recentViews= [{ProductID: productId, When: Date.now(), ViewCount:1}];
+        }
+        
+        console.log("^^^^^^^^ New RecentViews Storage")
+        console.log(recentViews)
+        localStorage.setItem(LOCAL_RECENTVIEWS, JSON.stringify(recentViews));
+
+        dispatch({
+            type: 'LOCAL_RECENTVIEWS',
+            payload:  recentViews
+        });
+    }
 }
+export const actUserGetRecentViews = (userId) => (dispatch) => {
+    console.log("  actUserGetRecentViews:" + userId)
+    if (userId) {
+        Backend.getUserRecentViews(userId,
+            response => {
+                console.log("actUserGetRecentViews Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                console.log(response.data)
+                dispatch({
+                    type: USER_GET_RECENTVIEWS,
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("actUserGetRecentViews error")
+            }); 
+    }
+}
+
+
+
+
 
 
 
 export const actUserAddFavorites = (userId, productId) => (dispatch) => {
     console.log("  actUserAddFavorites:" + userId + ",productId:" + productId)
-    Backend.addUserFavorites(userId, productId,
-        response => {
-            console.log("actUserAddFavorites Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-            console.log(response.data)
-        },
-        error => {
-            console.log("actUserAddFavorites error")
-        }); 
+    if (userId) {
+        Backend.addUserFavorites(userId, productId,
+            response => {
+                console.log("actUserAddFavorites Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                console.log(response.data)
+                dispatch({
+                    type: 'USER_UPDATE_FAVORITE',
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("actUserAddFavorites error")
+            }); 
+    }
 }
+// TODO: Set Active is True
+export const actUserDeleteFavorites = (itemId) => (dispatch) => {
+    console.log("  actUserDeleteFavorites:itemId:" + itemId)
+    if (itemId) {
+        Backend.deleteUserFavorites(itemId,
+            response => {
+                console.log("actUserDeleteFavorites Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                console.log(response.data)
+                dispatch({
+                    type: 'USER_DELETE_FAVORITE',
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("actUserDeleteFavorites error")
+                console.log(error)
+            }); 
+    }
+}
+
 export const actUserGetFavorites = (userId) => (dispatch) => {
-    console.log("  actUserGetFavorites")
-    Backend.getUserFavorites(userId,
-        response => {
-            console.log("actUserGetFavorites Done&&&&&&&&&&&&&&&&&&&&&&&&6")
-            console.log(response.data)
-            dispatch({
-                type: USER_GET_FAVORITES,
-                payload:  response.data
-            });
-        },
-        error => {
-            console.log("actUserGetFavorites error")
-        }); 
+    console.log("  actUserGetFavorites:" + userId)
+    if (userId) {
+        Backend.getUserFavorites(userId,
+            response => {
+                console.log("actUserGetFavorites Done&&&&&&&&&&&&&&&&&&&&&&&&6")
+                console.log(response.data)
+                dispatch({
+                    type: USER_GET_FAVORITES,
+                    payload:  response.data
+                });
+            },
+            error => {
+                console.log("actUserGetFavorites error")
+            }); 
+    }
 }
 
 
@@ -430,6 +566,69 @@ export default function(state = initialState, action) {
             ...state,
             recentViews: action.payload
         }
+    case 'LOCAL_RECENTVIEWS':
+        return {
+            ...state,
+            recentViews: action.payload
+        }
+    case 'USER_UPDATE_RECENTVIEWS':
+        // Add Single Element to cartItems, if Same, update quantity only
+        let oldRecentViews = [...state.recentViews];
+        let isFoundItem2 = false;
+        for (let idx = 0; idx < oldRecentViews.length; idx++) {
+            if (oldRecentViews[idx].id == action.payload.id) {
+                // found one, Remove and Push to begin of Queue
+                oldRecentViews.splice(idx, 1)
+                oldRecentViews.push(action.payload)
+                isFoundItem2 = true;
+                break;
+            }
+        }
+        if (!isFoundItem2) {
+            // Add to items
+            oldRecentViews.push(action.payload)
+        }
+        return {
+            ...state,
+            recentViews: oldRecentViews
+        }
+    case 'USER_UPDATE_FAVORITE':
+        // Add Single Element to cartItems, if Same, update quantity only
+        let oldFavs = [...state.favorites];
+        let isFoundItem3 = false;
+        for (let idx = 0; idx < oldFavs.length; idx++) {
+            if (oldFavs[idx].id == action.payload.id) {
+                // found one, Remove and Push to begin of Queue
+                // oldFavs.splice(idx, 1)
+                // oldFavs.push(action.payload)
+
+                // DO Nothing here
+                isFoundItem3 = true;
+                break;
+            }
+        }
+        if (!isFoundItem3) {
+            // Add to items
+            oldFavs.push(action.payload)
+        }
+        return {
+            ...state,
+            favorites: oldFavs
+        }
+    case 'USER_DELETE_FAVORITE':
+        // Remove Single Element from cartItems
+        let favDel = [...state.favorites];
+        for (let idx = 0; idx < favDel.length; idx++) {
+            if (favDel[idx].id == action.payload.id) {
+                // found one, replace
+                favDel.splice(idx, 1)
+                break;
+            }
+        }
+        return {
+            ...state,
+            favorites: favDel
+        }
     case USER_GET_FAVORITES:
         return {
             ...state,
@@ -440,6 +639,12 @@ export default function(state = initialState, action) {
             ...state,
             cartItems: action.payload
         }
+    case 'LOCAL_CART_ITEMS':
+        return {
+            ...state,
+            cartItems: action.payload
+        }
+
     case USER_UPDATE_CARTITEM:
         // Add Single Element to cartItems, if Same, update quantity only
         let oldCartItems = [...state.cartItems];

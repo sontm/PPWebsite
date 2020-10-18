@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "name": "Orders"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "UserID": {
+      "type": "string"
+    },
+    "CustomerName": {
+      "type": "string"
+    },
+    "CustomerPhone": {
+      "type": "string"
+    },
+    "CustomerEmail": {
+      "type": "string"
+    },
+    "CustomerAddress": {
+      "type": "string"
+    },
+    "OrderNumber": {
+      "type": "string"
+    },
+    "DatePlaced": {
+      "type": "datetime"
+    },
+    "DateConfirmed": {
+      "type": "datetime"
+    },
+    "DateCanceled": {
+      "type": "datetime"
+    },
+    "DateRejected": {
+      "type": "datetime"
+    },
+    "DateCompleted": {
+      "type": "datetime"
+    },
+    "Status": {
+      "type": "string"
+    },
+    "ShipmentMethod": {
+      "type": "string"
+    },
+    "ShipmentPrice": {
+      "type": "float"
+    },
+    "PaymentMethod": {
+      "type": "string"
+    },
+    "PaymentInfo": {
+      "type": "string"
+    }
+  }
+}

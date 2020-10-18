@@ -3,12 +3,17 @@ export const LOCAL_CART_ADDED = "LOCAL_CART_ADDED";
 export const LOCAL_JWT_TOKEN = "LOCAL_JWT_TOKEN";
 export const LOCAL_CSRF_TOKEN = "LOCAL_CSRF_TOKEN";
 
+export const LOCAL_CARTS = "carts";
+export const LOCAL_RECENTVIEWS = "recentViews";
+
 export const CONFIG_PRICE_DIVIDED_RANGE = 5;
 export const CONFIG_PRICE_ROUNDUP_TO = 10000;
 
 export const API_BASE_URL = 'http://localhost:4000/graphql';
 export const ACCESS_TOKEN = 'accessToken';
+
 export const STORAGE_CART_PROD = 'cartProdIds';
+export const STORAGE_TEMP_ADDRESS = 'tempAddr';
 
 export const POLL_LIST_SIZE = 30;
 export const MAX_CHOICES = 6;

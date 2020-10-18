@@ -77,13 +77,20 @@ class CartPage extends Component {
     componentDidUpdate() {
         // 
         console.log("-----Cart componentDidUpdate-------")
-        if (!this.isLoadCartDone && this.props.user.userProfile && this.props.user.userProfile.id) {
-            this.props.actUserGetCartItems(this.props.user.userProfile.id);
+        if (!this.isLoadCartDone) {
+            console.log("    Get User Carts Items ------")
+            if (this.props.user.userProfile && this.props.user.userProfile.id) {
+                this.props.actUserGetCartItems(this.props.user.userProfile.id);
+            } else {
+                this.props.actUserGetCartItems( null );
+            }
+            
             this.isLoadCartDone = true;
         }
-        if (!this.isLoadProdDone && this.props.user.userProfile && this.props.user.cartItems.length > 0 &&
+        if (!this.isLoadProdDone && this.props.user.cartItems.length > 0 &&
                 (!this.props.product.cartProducts || this.props.product.cartProducts.length < 1)) {
             // Get products info
+            console.log("    Get Product Info------")
             let productIds = [];
             this.props.user.cartItems.forEach(element => {
                 console.log(element)
@@ -107,6 +114,13 @@ class CartPage extends Component {
                 item.discountInfo = helpers.parseDiscountInformation(item.Product, 
                     this.props.siteInfo.categories, this.props.siteInfo.brands);
 
+                let productImages = item.Product.Images;
+                if (!productImages || !productImages.length) {
+                    productImages = item.Product.prod_parent.Images;
+                }
+
+                item.ImageURL = (productImages &&productImages.length) ? productImages[0].formats.thumbnail.url : "";
+
             }
         })
 
@@ -125,8 +139,7 @@ class CartPage extends Component {
                         style={{marginBottom: "10px"}}>
                     <List
                         itemLayout="vertical"
-                        dataSource={
-                            this.props.user.isLogined ? cartItems: []}
+                        dataSource={cartItems}
                         renderItem={item => {
                             if (item.Product) {
                             return (<List.Item
@@ -156,7 +169,7 @@ class CartPage extends Component {
                                 <img
                                     width={150}
                                     alt="logo"
-                                    src={item.Product.Images[0].formats.thumbnail.url}
+                                    src={item.ImageURL}
                                 />
                                 }
                             >
@@ -221,7 +234,7 @@ class CartPage extends Component {
                                 </Descriptions.Item>
                             </Descriptions>
                             <div style={{textAlign: "center"}}>
-                                <Link href="/checkout">
+                                <Link href="/checkout-useroption">
                                 <Button type="primary" size="large">Tiến Hành Đặt Hàng</Button>
                                 </Link>
                             </div>

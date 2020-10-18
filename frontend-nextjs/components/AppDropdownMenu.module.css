@@ -17,12 +17,23 @@
     display: block;
     color: rgb(5, 5, 5);
 }
-@media (max-width : 768px) {
+
+/* @media (max-width : 768px) {
     .flyout-container-display-home {
         display: block;
         width: 96%;
+        margin-left: 5%;
+        margin-right: 5%;
         height: 0px;
         overflow: hidden;
+    }
+} */
+@media (max-width: 5000px) {
+    .flyout-container-display-home {
+        /* display: block; */
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
     }
 }
 
@@ -39,6 +50,8 @@
     margin-top: 0px;
     z-index: 100;
     width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
     /* background: rgb(240, 240, 240); */
     min-height: 200px;
 }

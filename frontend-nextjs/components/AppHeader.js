@@ -6,6 +6,8 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import AppDropdownMenu from './AppDropdownMenu';
 
+import {actUserLogout} from '../redux/UserReducer';
+
 import {ShoppingCartOutlined, UserOutlined, MenuOutlined, ShopOutlined} from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Input, Popover } from 'antd';
 import { Row, Col, Button,Badge } from 'antd';
@@ -31,6 +33,8 @@ class AppHeader extends React.Component {
     this.onParentMenuHover = this.onParentMenuHover.bind(this);   
     this.onMenuContainerOut = this.onMenuContainerOut.bind(this);   
     this.onParentMenuClick = this.onParentMenuClick.bind(this);   
+
+    this.handleLogout = this.handleLogout.bind(this)
   }
   // WHen mouse over DanhMucSanPham
   onMenuListHover() {
@@ -80,6 +84,10 @@ class AppHeader extends React.Component {
       hoveredMenuList: false,
       hoveredParent: ""
     })
+  }
+
+  handleLogout() {
+    this.props.actUserLogout();
   }
 
 
@@ -205,12 +213,14 @@ class AppHeader extends React.Component {
             (this.state.hoveredBrandMenu ? "flyout-outside-mask-brand" : "")}></div> */}
           <Header>
           <div className={styles['app-header']}>
-          <Row>
+          <Row style={{marginLeft: "5%", marginRight: "5%"}}>
             <Col xs={0} sm={4} md={4} lg={4} xl={4} xxl={4}>
             <Link href="/">
-            <div className={styles['app-title']} >
-              <span>Phu Phuong</span>
-            </div>
+              <a>
+              <div className={styles['app-title']} >
+                <span>Phu Phuong</span>
+              </div>
+            </a>
             </Link>
             </Col>
 
@@ -267,10 +277,14 @@ class AppHeader extends React.Component {
               </Col>
           </Row>
 
-          <Row>
+
+
+
+
+          <Row style={{marginLeft: "5%", marginRight: "5%"}}>
           <Col xs={0} sm={0} md={8} lg={6} xl={6} xxl={4}>
             <div onMouseEnter={this.onMenuListHover} onMouseLeave={this.onMenuListOut}
-              style={{marginLeft:"15px"}} className={styles['hamburger-category-menu']}>
+              className={styles['hamburger-category-menu']}>
               <MenuOutlined />
               <span className={styles['category-menu-text']} >Danh Mục Sản Phẩm</span>
             </div>
@@ -311,6 +325,7 @@ class AppHeader extends React.Component {
 const mapStateToProps = (state) => (state);
 const mapDispatchToProps = (dispatch) => {
     return {
+      actUserLogout: bindActionCreators(actUserLogout, dispatch),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AppHeader)

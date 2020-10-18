@@ -44,8 +44,9 @@
 
 .app-header {
   background: #189eff;
-  margin-left: 2%;
-  margin-right: 2%;
+  margin-left: 0%;
+  margin-right: 0%;
+  z-index: 10;
 }
 
 /* xs, sm */

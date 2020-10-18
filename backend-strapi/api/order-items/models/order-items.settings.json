@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_items",
+  "info": {
+    "name": "OrderItems"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "ShortDescription": {
+      "type": "richtext"
+    },
+    "UnitPrice": {
+      "type": "float"
+    },
+    "CategoryName": {
+      "type": "string"
+    },
+    "CategoryID": {
+      "type": "string"
+    },
+    "BrandName": {
+      "type": "string"
+    },
+    "BrandID": {
+      "type": "string"
+    },
+    "AttributeString": {
+      "type": "string"
+    },
+    "DiscountValue": {
+      "type": "float"
+    },
+    "DiscountUnit": {
+      "type": "string"
+    },
+    "DiscountDesc": {
+      "type": "string"
+    },
+    "DiscountCoupon": {
+      "type": "string"
+    },
+    "DiscountGift": {
+      "type": "string"
+    },
+    "FinalUnitPrice": {
+      "type": "float"
+    },
+    "Quantity": {
+      "type": "integer"
+    },
+    "FinalTotalPrice": {
+      "type": "float"
+    },
+    "ParentOrderNumber": {
+      "type": "string"
+    },
+    "ImageURL": {
+      "type": "string"
+    }
+  }
+}
