@@ -3,6 +3,7 @@ import Helpers from '../util/Helpers';
 import { notification } from 'antd';
 import AppContant from '../util/AppConstant'
 import {LOCAL_CSRF_TOKEN, LOCAL_CARTS, LOCAL_RECENTVIEWS} from '../util/AppConstant'
+import helpers from '../util/Helpers';
 
 const USER_LOGIN_OK = 'USER_LOGIN_OK';
 const USER_LOGIN_START = 'USER_LOGIN_START';
@@ -176,12 +177,12 @@ export const actUserUpdateCartItem = (userId, productId, quantity) => (dispatch)
             
             if (!isFound) {
                 // add new 
-                cartItems.push({ProductID: productId, Quantity: 1});
+                cartItems.push({ProductID: productId, Quantity: 1, id: helpers.makeRandomAlphaNumeric(15)});
             }
             
         } else {
             cartItems = [];
-            cartItems.push({ProductID: productId, Quantity: 1});
+            cartItems.push({ProductID: productId, Quantity: 1, id: helpers.makeRandomAlphaNumeric(15)});
         }
         console.log("^^^^^^^^ New Carts Storage")
         console.log(cartItems)

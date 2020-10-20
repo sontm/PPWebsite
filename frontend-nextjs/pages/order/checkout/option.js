@@ -5,15 +5,10 @@ import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Head from 'next/head'
-import MyLayout from '../components/layout';
-import {STORAGE_CART_PROD} from '../util/AppConstant'
-import styles from './cart.module.css'
-import helpers from '../util/Helpers'
+import MyLayout from '../../../components/layout';
 
-import {actUserGetCartItems, actUserGetProductsInCart, actUserDeleteCartItem} from '../redux/UserReducer'
-
-import { Typography } from 'antd';
-const { Title } = Typography;
+import { Typography, Space } from 'antd';
+const { Title, Text } = Typography;
 
 class CheckoutOption extends Component {
     constructor(props) {
@@ -89,7 +84,7 @@ class CheckoutOption extends Component {
 
                 <Col xs={24} sm={24} md={10} lg={10} xl={10} xxl={10}>
                     <Card title="Mua Hang Chi Mat 10s">
-                        <Link href="/checkout">
+                        <Link href="/order/checkout">
                         <div style={{display: "flex",justifyContent: "center"}}>
                         <Button type="primary" size="large"
                             style={{width: "300px", height:"50px", fontSize:"1.5em"}}>Mua Khong Can Dang NHap</Button>

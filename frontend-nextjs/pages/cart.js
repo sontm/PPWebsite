@@ -146,7 +146,7 @@ class CartPage extends Component {
                                 key={item.id}
                                 actions={[
                                     <Row>
-                                    <Button type="link" onClick={e => {
+                                    <Button type="link" onClick={() => {
                                         this.handleRemoveCartItem(item.id)
                                     }}>Xoá</Button>,
                                     <Button type="link">Để Dành Mua Sau</Button>,
@@ -234,7 +234,7 @@ class CartPage extends Component {
                                 </Descriptions.Item>
                             </Descriptions>
                             <div style={{textAlign: "center"}}>
-                                <Link href="/checkout-useroption">
+                                <Link href="/order/checkout/option">
                                 <Button type="primary" size="large">Tiến Hành Đặt Hàng</Button>
                                 </Link>
                             </div>

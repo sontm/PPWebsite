@@ -167,6 +167,19 @@ class Backend {
             .catch((error) => {onError(error);});
     }
 
+    getUserOrderByOrderNumber(orderNumber, onOK, onError) {
+        axios.get(AppConstants.API_ORDER_URL + "/orders?OrderNumber="+orderNumber,
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    getUserOrderItemByOrderNumber(orderNumber, onOK, onError) {
+        axios.get(AppConstants.API_ORDER_URL + "/order-items?ParentOrderNumber="+orderNumber,
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
 }
 
 const backend = new Backend();
